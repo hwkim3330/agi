@@ -1,0 +1,24 @@
+agents:
+  - name: "claude"
+    role: "Technical Expert"
+    specialty: "Technical architecture, system design, implementation strategy"
+    mode: "batch"
+    cmd: ["./mock_agents/mock-claude-business"]
+    timeout_s: 30
+    personality: "Analytical, precise, technical"
+
+  - name: "gemini"
+    role: "Market Analyst"
+    specialty: "Market research, competitive analysis, data insights"
+    mode: "batch"
+    cmd: ["./mock_agents/mock-gemini-business"]
+    timeout_s: 30
+    personality: "Data-driven, thorough, analytical"
+
+  - name: "codex"
+    role: "Creative Strategist"
+    specialty: "Creative marketing, innovative partnerships, viral campaigns"
+    mode: "batch"
+    cmd: ["./mock_agents/mock-codex-business"]
+    timeout_s: 30
+    personality: "Creative, innovative, trend-aware"
