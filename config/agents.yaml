@@ -6,11 +6,8 @@ agents:
   - name: "claude"
     role: "Technical Expert"
     specialty: "Code analysis, debugging, system design, software architecture"
-    mode: "expect"  # Uses expect wrapper for REPL interaction
-    cmd: ["claude-code", "--dangerously-skip-permissions"]
-    end_pattern: "\\n> $"
-    send_suffix: "\\n"
-    startup_wait_ms: 500
+    mode: "batch"
+    cmd: ["claude", "--print", "--dangerously-skip-permissions", "{PROMPT}"]
     timeout_s: 180
     personality: "Analytical, precise, technical"
     strengths:
@@ -23,8 +20,8 @@ agents:
   - name: "gemini"
     role: "Data Analyst"
     specialty: "Research, analysis, fact-checking, data interpretation"
-    mode: "batch"  # Batch mode for single request/response
-    cmd: ["gemini", "generate", "{PROMPT}"]
+    mode: "batch"
+    cmd: ["gemini", "{PROMPT}"]
     timeout_s: 180
     personality: "Methodical, thorough, evidence-based"
     strengths:
@@ -41,7 +38,7 @@ agents:
     role: "Creative Problem Solver"
     specialty: "Innovation, creative solutions, brainstorming, strategic thinking"
     mode: "batch"
-    cmd: ["openai", "chat", "completions", "create", "-m", "gpt-4", "-u", "user", "{PROMPT}"]
+    cmd: ["codex", "exec", "{PROMPT}"]
     timeout_s: 180
     personality: "Innovative, creative, solution-oriented"
     strengths:
