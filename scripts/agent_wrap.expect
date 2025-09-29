@@ -1,0 +1,164 @@
+#!/usr/bin/expect -f
+
+# AGI Trinity - Expect Wrapper for REPL/TUI Agents
+# Handles interactive CLI tools and REPLs automatically
+
+# Parse command line arguments
+if {$argc < 3} {
+    puts stderr "Usage: $argv0 <end_pattern> <timeout_s> <command> \[args...\]"
+    puts stderr "Example: $argv0 \"\\n> $\" 180 claude-code --dangerously-skip-permissions"
+    exit 1
+}
+
+set end_pattern [lindex $argv 0]
+set timeout_s [lindex $argv 1]
+set cmd [lrange $argv 2 end]
+
+# Configure expect behavior
+set timeout $timeout_s
+log_user 1
+exp_internal 0
+
+# Set environment for non-interactive mode
+set env(DEBIAN_FRONTEND) "noninteractive"
+set env(CI) "true"
+set env(BATCH_MODE) "1"
+set env(AUTO_APPROVE) "yes"
+set env(SKIP_PROMPTS) "1"
+set env(NO_INTERACTION) "1"
+
+# Function to handle common prompts
+proc handle_prompts {} {
+    # Handle permission prompts
+    expect {
+        -re "(?i)(do you want to continue|proceed|confirm|approve)" {
+            send "yes\r"
+            exp_continue
+        }
+        -re "(?i)(password|passphrase)" {
+            send "\r"
+            exp_continue
+        }
+        -re "(?i)(y/n|yes/no)" {
+            send "y\r"
+            exp_continue
+        }
+        -re "(?i)(press.*key|continue)" {
+            send "\r"
+            exp_continue
+        }
+        -re "(?i)(select.*option|choose)" {
+            send "1\r"
+            exp_continue
+        }
+        timeout {
+            puts stderr "\[agent_wrap.expect\] Timeout waiting for prompts"
+            return
+        }
+        eof {
+            return
+        }
+    }
+}
+
+# Start the command
+puts "\[agent_wrap.expect\] Starting: $cmd"
+eval spawn $cmd
+
+# Handle startup sequence
+expect {
+    -re "(?i)(initializing|loading|starting)" {
+        # Wait for initialization
+        exp_continue
+    }
+    -re "(?i)(error|failed|cannot)" {
+        puts stderr "\[agent_wrap.expect\] Error detected during startup"
+        exit 1
+    }
+    timeout {
+        puts stderr "\[agent_wrap.expect\] Startup timeout"
+        exit 1
+    }
+    eof {
+        puts stderr "\[agent_wrap.expect\] Process ended during startup"
+        exit 1
+    }
+    -re $end_pattern {
+        puts "\[agent_wrap.expect\] Agent ready"
+    }
+}
+
+# Main interaction loop
+set prompt_sent 0
+
+proc send_prompt {prompt} {
+    global prompt_sent
+    if {!$prompt_sent} {
+        puts "\[agent_wrap.expect\] Sending prompt: [string range $prompt 0 100]..."
+        send "$prompt\r"
+        set prompt_sent 1
+    }
+}
+
+# Read prompt from environment or stdin
+if {[info exists env(AGENT_PROMPT)]} {
+    set user_prompt $env(AGENT_PROMPT)
+} else {
+    # Read from stdin
+    set user_prompt ""
+    if {![catch {read stdin} stdin_content]} {
+        set user_prompt [string trim $stdin_content]
+    }
+}
+
+if {$user_prompt eq ""} {
+    puts stderr "\[agent_wrap.expect\] No prompt provided"
+    exit 1
+}
+
+# Send the prompt and handle response
+send_prompt $user_prompt
+
+# Main expect loop
+while {1} {
+    expect {
+        -re "(?i)(do you want to continue|proceed|confirm|approve)" {
+            send "yes\r"
+            exp_continue
+        }
+        -re "(?i)(y/n|yes/no)" {
+            send "y\r"
+            exp_continue
+        }
+        -re "(?i)(password|passphrase)" {
+            send "\r"
+            exp_continue
+        }
+        -re "(?i)(press.*key|continue)" {
+            send "\r"
+            exp_continue
+        }
+        -re "(?i)(error|failed)" {
+            puts stderr "\[agent_wrap.expect\] Error detected in output"
+            # Don't exit, continue to get full response
+            exp_continue
+        }
+        -re $end_pattern {
+            puts "\[agent_wrap.expect\] Response complete"
+            break
+        }
+        timeout {
+            puts stderr "\[agent_wrap.expect\] Response timeout"
+            break
+        }
+        eof {
+            puts "\[agent_wrap.expect\] Agent process ended"
+            break
+        }
+    }
+}
+
+# Clean exit
+catch {exp_close}
+catch {exp_wait}
+exit 0

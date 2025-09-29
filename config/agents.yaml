@@ -1,0 +1,115 @@
+# AGI Trinity - Agent Configuration
+# Configure your AI CLI tools for the Trinity orchestrator
+
+agents:
+  # Claude Code - Technical Expert
+  - name: "claude"
+    role: "Technical Expert"
+    specialty: "Code analysis, debugging, system design, software architecture"
+    mode: "expect"  # Uses expect wrapper for REPL interaction
+    cmd: ["claude-code", "--dangerously-skip-permissions"]
+    end_pattern: "\\n> $"
+    send_suffix: "\\n"
+    startup_wait_ms: 500
+    timeout_s: 180
+    personality: "Analytical, precise, technical"
+    strengths:
+      - "Deep code analysis"
+      - "System architecture design"
+      - "Debugging and optimization"
+      - "Best practices enforcement"
+
+  # Gemini Pro - Data Analyst & Researcher
+  - name: "gemini"
+    role: "Data Analyst"
+    specialty: "Research, analysis, fact-checking, data interpretation"
+    mode: "batch"  # Batch mode for single request/response
+    cmd: ["gemini", "generate", "{PROMPT}"]
+    timeout_s: 180
+    personality: "Methodical, thorough, evidence-based"
+    strengths:
+      - "Comprehensive research"
+      - "Data analysis and visualization"
+      - "Fact verification"
+      - "Market analysis"
+    # Alternative Gemini CLI configurations (uncomment as needed):
+    # cmd: ["gcloud", "ai", "models", "generate-text", "--model=gemini-pro", "--prompt={PROMPT}"]
+    # cmd: ["curl", "-X", "POST", "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent"]
+
+  # Codex/GPT-4 - Creative Problem Solver
+  - name: "codex"
+    role: "Creative Problem Solver"
+    specialty: "Innovation, creative solutions, brainstorming, strategic thinking"
+    mode: "batch"
+    cmd: ["openai", "chat", "completions", "create", "-m", "gpt-4", "-u", "user", "{PROMPT}"]
+    timeout_s: 180
+    personality: "Innovative, creative, solution-oriented"
+    strengths:
+      - "Creative problem solving"
+      - "Strategic innovation"
+      - "Brainstorming and ideation"
+      - "Out-of-the-box thinking"
+    # Alternative OpenAI CLI configurations:
+    # cmd: ["openai", "api", "chat.completions.create", "-m", "gpt-4", "--messages", "[{\"role\":\"user\",\"content\":\"{PROMPT}\"}]"]
+
+  # Example: Additional agent configurations (uncomment to use)
+
+  # GitHub Copilot CLI (if available)
+  # - name: "copilot"
+  #   role: "Code Assistant"
+  #   specialty: "Code generation, completion, documentation"
+  #   mode: "batch"
+  #   cmd: ["gh", "copilot", "suggest", "{PROMPT}"]
+  #   timeout_s: 120
+  #   personality: "Practical, code-focused"
+
+  # Anthropic Claude via curl (alternative)
+  # - name: "claude-api"
+  #   role: "General Assistant"
+  #   specialty: "General reasoning, writing, analysis"
+  #   mode: "batch"
+  #   cmd: ["curl", "-X", "POST", "https://api.anthropic.com/v1/messages"]
+  #   timeout_s: 180
+  #   personality: "Helpful, harmless, honest"
+
+# Global configuration
+global:
+  # Default consensus strategy: vote, synthesis, fanout
+  default_strategy: "synthesis"
+
+  # Maximum parallel agents
+  max_concurrent: 3
+
+  # Session logging
+  save_sessions: true
+
+  # Observation buffer settings
+  max_buffer_lines: 10000
+  buffer_trim_threshold: 12000
+
+  # Retry settings
+  max_retries: 3
+  retry_delay_s: 2
+
+  # Performance settings
+  startup_grace_period: 2000  # ms
+  agent_health_check: true
+
+# Consensus engine configuration
+consensus:
+  vote:
+    # Scoring weights for vote consensus
+    content_length_weight: 0.3
+    success_rate_weight: 0.4
+    latency_weight: 0.2
+    agent_priority_weight: 0.1
+
+  synthesis:
+    # How to combine multiple responses
+    include_metadata: true
+    format: "structured"  # structured, plain, markdown
+    max_synthesis_length: 10000
+
+  fanout:
+    # No consensus, just show all responses
+    preserve_individual_formatting: true
