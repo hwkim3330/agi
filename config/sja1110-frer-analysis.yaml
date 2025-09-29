@@ -1,0 +1,24 @@
+agents:
+  - name: "claude"
+    role: "Technical Expert"
+    specialty: "Hardware analysis, firmware reverse engineering, register-level programming"
+    mode: "batch"
+    cmd: ["./mock_agents/mock-claude-tech"]
+    timeout_s: 30
+    personality: "Deep technical analysis, precise implementation"
+
+  - name: "gemini"
+    role: "Research Analyst"
+    specialty: "Documentation research, market analysis, competitive intelligence"
+    mode: "batch"
+    cmd: ["./mock_agents/mock-gemini-research"]
+    timeout_s: 30
+    personality: "Data-driven research, comprehensive documentation analysis"
+
+  - name: "codex"
+    role: "Implementation Specialist"
+    specialty: "Creative solutions, code generation, configuration automation"
+    mode: "batch"
+    cmd: ["./mock_agents/mock-codex-implementation"]
+    timeout_s: 30
+    personality: "Innovative implementation, practical solutions"
