@@ -1,0 +1,3 @@
+"""
+AGI Trinity - Test Suite
+"""
