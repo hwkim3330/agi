@@ -568,5 +568,222 @@ def export(
     asyncio.run(run())
 
 
+# ============================================
+# 웹 크롤링 기반 지속학습 명령어
+# ============================================
+
+@app.command()
+def crawl(
+    topic: str = typer.Argument(..., help="크롤링할 주제"),
+    pages: int = typer.Option(20, "--pages", "-p", help="크롤링할 페이지 수"),
+    urls: Optional[List[str]] = typer.Option(None, "--url", "-u", help="시드 URL (여러 개 가능)")
+):
+    """
+    🌐 웹 크롤링으로 주제 학습
+
+    웹에서 정보를 수집하여 특정 주제를 학습합니다.
+    """
+    console.print(Panel.fit(
+        f"[bold blue]Web Crawling: {topic}[/bold blue]\n"
+        f"[dim]Pages: {pages}[/dim]",
+        title="🌐 Web Learning"
+    ))
+
+    async def run():
+        from core.web_crawler import ContinuousWebLearner
+
+        learning_engine = await get_learning_engine()
+
+        web_learner = ContinuousWebLearner(
+            learning_engine=learning_engine,
+            storage_path=str(AGI_HOME / "web_learning")
+        )
+
+        with console.status(f"[bold green]Crawling web for '{topic}'...[/bold green]"):
+            result = await web_learner.learn_topic(
+                topic=topic,
+                max_pages=pages,
+                sources=list(urls) if urls else None
+            )
+
+        console.print("\n[bold green]Crawling Complete![/bold green]")
+
+        table = Table(title="Results")
+        table.add_column("Metric", style="cyan")
+        table.add_column("Value", style="green")
+
+        table.add_row("Pages Crawled", str(result["pages_crawled"]))
+        table.add_row("Items Learned", str(result["items_learned"]))
+        table.add_row("Time Elapsed", f"{result['elapsed_seconds']:.1f}s")
+        table.add_row("Avg Quality", f"{result['avg_quality']:.2f}")
+
+        console.print(table)
+
+        # 전체 통계
+        stats = web_learner.get_stats()
+        console.print(f"\n[dim]Total learned: {stats['total_learned']} items[/dim]")
+
+    asyncio.run(run())
+
+
+@app.command()
+def web_learn(
+    source: str = typer.Option("tech", "--source", "-s",
+        help="소스 유형: wikipedia, tech, science, programming, korean"),
+    pages: int = typer.Option(30, "--pages", "-p", help="크롤링할 페이지 수")
+):
+    """
+    📚 사전정의 소스에서 학습
+
+    신뢰할 수 있는 지식 소스에서 학습합니다.
+    - wikipedia: 위키피디아
+    - tech: AI/기술 뉴스
+    - science: 과학 뉴스
+    - programming: 프로그래밍
+    - korean: 한국어 콘텐츠
+    """
+    console.print(Panel.fit(
+        f"[bold blue]Learning from: {source}[/bold blue]\n"
+        f"[dim]Max pages: {pages}[/dim]",
+        title="📚 Source Learning"
+    ))
+
+    async def run():
+        from core.web_crawler import ContinuousWebLearner
+
+        learning_engine = await get_learning_engine()
+
+        web_learner = ContinuousWebLearner(
+            learning_engine=learning_engine,
+            storage_path=str(AGI_HOME / "web_learning")
+        )
+
+        with console.status(f"[bold green]Learning from {source} sources...[/bold green]"):
+            result = await web_learner.learn_from_sources(
+                source_type=source,
+                max_pages=pages
+            )
+
+        console.print("\n[bold green]Learning Complete![/bold green]")
+        console.print(f"Pages crawled: {result['pages_crawled']}")
+        console.print(f"Total learned: {result['total_learned']}")
+
+    asyncio.run(run())
+
+
+@app.command()
+def auto_learn(
+    topics: Optional[List[str]] = typer.Option(None, "--topic", "-t", help="학습 주제 (여러 개 가능)"),
+    interval: int = typer.Option(60, "--interval", "-i", help="학습 간격 (분)"),
+    pages: int = typer.Option(10, "--pages", "-p", help="주제당 페이지 수"),
+    cycles: int = typer.Option(0, "--cycles", "-c", help="최대 주기 (0=무한)"),
+    background: bool = typer.Option(False, "--background", "-b", help="백그라운드 실행")
+):
+    """
+    🔄 자동 지속학습 실행
+
+    백그라운드에서 웹을 크롤링하며 지속적으로 학습합니다.
+
+    예시:
+        python agi.py auto-learn --topic "machine learning" --topic "python" --interval 30
+    """
+    if background:
+        console.print("[yellow]백그라운드 모드는 scripts/auto_learner.py를 직접 실행하세요:[/yellow]")
+        console.print("  python scripts/auto_learner.py --interval 60 &")
+        return
+
+    console.print(Panel.fit(
+        f"[bold blue]Auto Learning Mode[/bold blue]\n"
+        f"[dim]Interval: {interval} min | Pages/topic: {pages}[/dim]\n"
+        f"[dim]Press Ctrl+C to stop[/dim]",
+        title="🔄 Continuous Learning"
+    ))
+
+    async def run():
+        from core.web_crawler import ContinuousWebLearner
+
+        learning_engine = await get_learning_engine()
+
+        web_learner = ContinuousWebLearner(
+            learning_engine=learning_engine,
+            storage_path=str(AGI_HOME / "web_learning")
+        )
+
+        # 기본 주제
+        default_topics = [
+            "artificial intelligence",
+            "machine learning",
+            "deep learning",
+            "python programming",
+            "computer science",
+            "인공지능",
+            "머신러닝"
+        ]
+
+        learn_topics = list(topics) if topics else default_topics
+
+        console.print(f"Topics to learn: {', '.join(learn_topics)}")
+        console.print("\n[green]Starting continuous learning...[/green]\n")
+
+        try:
+            await web_learner.continuous_learn(
+                topics=learn_topics,
+                interval_minutes=interval,
+                pages_per_topic=pages
+            )
+        except KeyboardInterrupt:
+            console.print("\n[yellow]Stopping...[/yellow]")
+            web_learner.stop()
+
+        # 최종 통계
+        stats = web_learner.get_stats()
+        console.print(f"\n[bold]Final Stats:[/bold]")
+        console.print(f"  Total crawled: {stats['total_crawled']}")
+        console.print(f"  Total learned: {stats['total_learned']}")
+
+        if stats['top_topics']:
+            console.print(f"\n[bold]Top Topics:[/bold]")
+            for topic, count in stats['top_topics'][:5]:
+                console.print(f"  • {topic}: {count}")
+
+    asyncio.run(run())
+
+
+@app.command()
+def web_stats():
+    """
+    📊 웹 학습 통계 조회
+
+    웹 크롤링을 통한 학습 통계를 표시합니다.
+    """
+    async def run():
+        from core.web_crawler import ContinuousWebLearner
+
+        web_learner = ContinuousWebLearner(
+            storage_path=str(AGI_HOME / "web_learning")
+        )
+
+        stats = web_learner.get_stats()
+
+        table = Table(title="🌐 Web Learning Statistics")
+        table.add_column("Metric", style="cyan")
+        table.add_column("Value", style="green")
+
+        table.add_row("Total Pages Crawled", str(stats['total_crawled']))
+        table.add_row("Total Items Learned", str(stats['total_learned']))
+        table.add_row("Last Run", stats.get('last_run', 'Never'))
+        table.add_row("Storage Path", stats['storage_path'])
+
+        console.print(table)
+
+        if stats['top_topics']:
+            console.print("\n[bold]Top Learned Topics:[/bold]")
+            for topic, count in stats['top_topics']:
+                bar = "█" * min(count, 20)
+                console.print(f"  {topic[:30]:30} {bar} ({count})")
+
+    asyncio.run(run())
+
+
 if __name__ == "__main__":
     app()

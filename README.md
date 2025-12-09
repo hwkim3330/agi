@@ -291,6 +291,62 @@ mypy .
 python scripts/train_continual.py --help
 ```
 
+## 🌐 웹 크롤링 학습
+
+웹에서 정보를 수집하여 지속적으로 학습합니다.
+
+### 명령어
+
+```bash
+# 특정 주제 웹 크롤링 학습
+python agi.py crawl "machine learning" --pages 30
+
+# 사전정의 소스에서 학습
+python agi.py web-learn --source tech --pages 50
+python agi.py web-learn --source wikipedia
+python agi.py web-learn --source korean
+
+# 자동 지속학습 (무한 루프)
+python agi.py auto-learn --interval 60 --pages 10
+
+# 특정 주제만 자동 학습
+python agi.py auto-learn --topic "python" --topic "AI" --interval 30
+
+# 웹 학습 통계
+python agi.py web-stats
+```
+
+### 지원 소스
+
+| 소스 | 설명 |
+|------|------|
+| `wikipedia` | 위키피디아 (영문/한글) |
+| `tech` | AI/기술 뉴스 (arxiv, HN, dev.to) |
+| `science` | 과학 뉴스 |
+| `programming` | 프로그래밍 (SO, GitHub, FreeCodeCamp) |
+| `korean` | 한국어 콘텐츠 (브런치, velog) |
+
+### 백그라운드 실행
+
+```bash
+# 백그라운드 자동 학습 데몬
+nohup python scripts/auto_learner.py --interval 60 &
+
+# 상태 확인
+cat ~/.trinity/auto_learning/auto_learner.pid
+
+# 중지
+kill $(cat ~/.trinity/auto_learning/auto_learner.pid)
+```
+
+### 품질 필터링
+
+- robots.txt 준수
+- 최소 콘텐츠 길이 필터
+- 스팸/광고 필터링
+- 품질 점수 기반 필터 (0.3 이상)
+- 언어 필터 (영어/한국어)
+
 ## 📝 로드맵
 
 - [x] LFM2-VL 모델 통합
@@ -298,6 +354,8 @@ python scripts/train_continual.py --help
 - [x] 멀티모달 처리
 - [x] 경험 재생 버퍼
 - [x] 지식 그래프
+- [x] 웹 크롤링 학습
+- [x] 자동 지속학습
 - [ ] 음성 입출력
 - [ ] 웹 UI
 - [ ] 분산 학습
