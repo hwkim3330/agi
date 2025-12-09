@@ -9,7 +9,7 @@
 
 ## 개요
 
-AGI Trinity는 Claude Opus 4.5, Gemini 2.5 Pro, GPT-4.1/o3를 통합하여 **집단 지능**을 구현하는 멀티에이전트 오케스트레이터입니다. 각 AI의 고유한 강점을 활용하여 복잡한 문제를 다각도로 분석하고 민주적 합의를 통해 최적의 솔루션을 도출합니다.
+AGI Trinity는 Claude Opus 4.5, Gemini 3 Pro, GPT-5.1을 통합하여 **집단 지능**을 구현하는 멀티에이전트 오케스트레이터입니다. 각 AI의 고유한 강점을 활용하여 복잡한 문제를 다각도로 분석하고 민주적 합의를 통해 최적의 솔루션을 도출합니다.
 
 ### 핵심 가치
 
@@ -31,8 +31,8 @@ AGI Trinity는 Claude Opus 4.5, Gemini 2.5 Pro, GPT-4.1/o3를 통합하여 **집
          │                 │                 │
          ▼                 ▼                 ▼
    ┌──────────┐      ┌──────────┐      ┌──────────┐
-   │  CLAUDE  │      │  GEMINI  │      │  GPT-4.1 │
-   │ Opus 4.5 │      │ 2.5 Pro  │      │  / o3    │
+   │  CLAUDE  │      │  GEMINI  │      │   GPT    │
+   │ Opus 4.5 │      │  3 Pro   │      │   5.1    │
    │  Expert  │      │ Analyst  │      │ Creative │
    └────┬─────┘      └────┬─────┘      └────┬─────┘
         │                 │                 │
@@ -127,8 +127,8 @@ agi/
 ├── agents/                 # AI 에이전트 어댑터
 │   ├── base.py             # 기본 어댑터 클래스
 │   ├── claude_adapter.py   # Claude Code 어댑터
-│   ├── gemini_adapter.py   # Gemini 2.5 Pro 어댑터
-│   └── openai_adapter.py   # GPT-4.1/o3 어댑터
+│   ├── gemini_adapter.py   # Gemini 3 Pro 어댑터
+│   └── openai_adapter.py   # GPT-5.1 어댑터
 ├── core/                   # 핵심 로직
 │   ├── consensus.py        # 합의 엔진 (Python)
 │   ├── router.py           # 요청 라우터
@@ -149,10 +149,10 @@ agi/
 
 | 에이전트 | 모델 | 역할 | 강점 |
 |---------|------|------|------|
-| **Claude** | Opus 4.5 | 기술 전문가 | 코드 분석, 디버깅, 시스템 설계, 보안 검토, 긴 컨텍스트 처리 |
-| **Gemini** | 2.5 Pro | 데이터 분석가 | 연구, 팩트 체킹, 멀티모달 분석, 시장 분석 |
-| **GPT** | 4.1 / o3 | 창의적 문제 해결사 | 혁신적 솔루션, 브레인스토밍, 전략 수립, 추론 |
-| **Codex** | o3-mini | 코드 생성기 | 빠른 코드 생성, 자동 완성, 리팩토링 |
+| **Claude** | Opus 4.5 | 기술 전문가 | 코드 분석, 디버깅, 시스템 설계, 보안 검토, 200K 컨텍스트 |
+| **Gemini** | 3 Pro | 데이터 분석가 | 연구, 팩트 체킹, 멀티모달 분석, Deep Think 추론 |
+| **GPT** | 5.1 | 창의적 문제 해결사 | 혁신적 솔루션, 브레인스토밍, 전략 수립, 통합 추론 |
+| **Codex** | GPT-5-mini | 코드 생성기 | 빠른 코드 생성, 자동 완성, 리팩토링 |
 
 ## WASM 최적화
 
