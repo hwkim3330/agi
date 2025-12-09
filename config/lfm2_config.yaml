@@ -1,0 +1,101 @@
+# LFM2-VL AGI Configuration
+# Continual Learning Vision-Language Model Settings
+
+model:
+  id: "LiquidAI/LFM2-VL-1.6B"
+  device: "auto"  # "auto", "cuda", "cpu", "cuda:0"
+  dtype: "bfloat16"  # "bfloat16", "float16", "float32"
+
+generation:
+  max_new_tokens: 512
+  temperature: 0.1
+  min_p: 0.15
+  repetition_penalty: 1.05
+  do_sample: true
+
+vision:
+  min_image_tokens: 64
+  max_image_tokens: 256
+  do_image_splitting: true
+  target_size: [512, 512]
+
+memory:
+  storage_path: "~/.trinity/lfm2_memory"
+  max_context_length: 32768
+  experience_buffer_size: 10000
+  long_term_memory_enabled: true
+
+continual_learning:
+  enabled: true
+  learning_rate: 0.00001  # 1e-5
+  batch_size: 8
+  training_interval: 100  # Train every N interactions
+  min_quality_threshold: 0.7  # Minimum quality for learning
+
+  # Elastic Weight Consolidation (망각 방지)
+  ewc:
+    enabled: true
+    lambda: 1000  # Regularization strength
+    fisher_samples: 100
+
+  # LoRA configuration (효율적 파인튜닝)
+  lora:
+    enabled: true
+    r: 8
+    alpha: 16
+    dropout: 0.05
+    target_modules:
+      - "q_proj"
+      - "v_proj"
+
+curriculum:
+  enabled: true
+  initial_difficulty: 0.3
+  target_difficulty: 0.9
+  steps_to_target: 1000
+  competence_threshold: 0.8
+
+knowledge:
+  consolidation_enabled: true
+  max_concepts: 10000
+  retrieval_top_k: 5
+
+agents:
+  - name: "lfm2_primary"
+    role: "Multimodal AGI Core"
+    specialty: "Vision-Language Understanding, Reasoning, Continual Learning"
+    personality: "Adaptive, curious, multimodal intelligence"
+    mode: "local"
+    timeout_s: 120
+    max_retries: 3
+
+  - name: "lfm2_specialist_vision"
+    role: "Vision Specialist"
+    specialty: "Image Analysis, Visual Reasoning, Object Detection"
+    personality: "Detail-oriented, visual expert"
+    mode: "local"
+    timeout_s: 120
+    temperature_override: 0.05
+
+  - name: "lfm2_specialist_reasoning"
+    role: "Reasoning Specialist"
+    specialty: "Logical Reasoning, Problem Solving, Analysis"
+    personality: "Analytical, methodical, thorough"
+    mode: "local"
+    timeout_s: 180
+    temperature_override: 0.2
+
+ensemble:
+  enabled: false  # Enable for multi-instance voting
+  num_instances: 3
+  voting_strategy: "quality_weighted"  # "majority", "quality_weighted", "confidence_weighted"
+
+monitoring:
+  log_level: "INFO"
+  metrics_enabled: true
+  save_interval: 50  # Save state every N interactions
+
+web_ui:
+  enabled: false
+  host: "127.0.0.1"
+  port: 8080
