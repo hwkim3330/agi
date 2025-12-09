@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 AGI Trinity - Multi-Agent AI Orchestrator
-Evangelion-inspired AI collaboration framework
+Next-generation AI collaboration framework
 
 "Three minds, one consciousness"
 """

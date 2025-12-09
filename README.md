@@ -1,6 +1,6 @@
 # AGI Trinity - Multi-Agent AI Orchestrator
 
-> "Three minds, one consciousness" - 에반게리온에서 영감받은 AI 협업 프레임워크
+> "Three minds, one consciousness" - 차세대 멀티에이전트 AI 협업 프레임워크
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
