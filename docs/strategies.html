@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consensus Strategies - AGI Trinity</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xz/fonts@1/serve/plus-jakarta-sans.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header glass">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">T</div>
+                <span class="logo-text gradient-text">AGI Trinity</span>
+            </a>
+
+            <nav class="nav">
+                <a href="index.html">Home</a>
+                <a href="agents.html">Agents</a>
+                <a href="strategies.html" class="active">Strategies</a>
+                <a href="demo.html">Demo</a>
+                <a href="docs.html">Docs</a>
+            </nav>
+
+            <a href="https://github.com/hwkim3330/agi" target="_blank" class="btn btn-primary">
+                GitHub
+            </a>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero" style="padding-bottom: 2rem;">
+        <div class="container">
+            <h1>
+                <span class="gradient-text">Consensus Strategies</span>
+            </h1>
+            <p>
+                여러 AI의 응답을 어떻게 통합할지 결정하는<br>
+                4가지 합의 전략을 제공합니다
+            </p>
+        </div>
+    </section>
+
+    <!-- Strategy Overview -->
+    <section class="section" style="padding-top: 2rem;">
+        <div class="container">
+            <h2 class="section-title">전략 비교</h2>
+
+            <div class="table-wrapper glass">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>전략</th>
+                            <th>설명</th>
+                            <th>사용 사례</th>
+                            <th>신뢰도</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="font-weight: 600;">Vote</td>
+                            <td>최고 점수 응답 선택</td>
+                            <td>정답이 명확한 질문</td>
+                            <td><span class="badge badge-success">High</span></td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 600;">Synthesis</td>
+                            <td>모든 응답 통합</td>
+                            <td>종합적 분석 필요</td>
+                            <td><span class="badge badge-info">Medium</span></td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 600;">Debate</td>
+                            <td>AI간 토론 후 결론</td>
+                            <td>논쟁적 주제</td>
+                            <td><span class="badge badge-success">High</span></td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 600;">Specialist</td>
+                            <td>전문가 자동 선택</td>
+                            <td>특화된 질문</td>
+                            <td><span class="badge badge-warning">Variable</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Vote Strategy -->
+    <section class="section" id="vote" style="background: rgba(0,0,0,0.2);">
+        <div class="container" style="max-width: 900px;">
+            <div class="card glass-strong" style="padding: 2rem;">
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                    <div style="font-size: 2.5rem;">🗳️</div>
+                    <div>
+                        <h2 style="font-size: 1.75rem; font-weight: 700;">Vote Strategy</h2>
+                        <p style="color: #9ca3af;">최고 점수 응답 선택</p>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                    <div>
+                        <h3 style="font-weight: 600; margin-bottom: 1rem;">동작 방식</h3>
+                        <ol style="color: #d1d5db; list-style: decimal; padding-left: 1.25rem;">
+                            <li style="margin-bottom: 0.5rem;">각 에이전트의 응답을 점수화</li>
+                            <li style="margin-bottom: 0.5rem;">콘텐츠 길이, 응답 시간, 에이전트 가중치 고려</li>
+                            <li style="margin-bottom: 0.5rem;">최고 점수 응답을 최종 결과로 선택</li>
+                        </ol>
+                    </div>
+                    <div>
+                        <h3 style="font-weight: 600; margin-bottom: 1rem;">최적 사용</h3>
+                        <ul class="feature-list">
+                            <li>정답이 하나인 질문</li>
+                            <li>기술적 문제 해결</li>
+                            <li>빠른 결과가 필요한 경우</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="code-block">
+<code><span class="comment"># CLI</span>
+python trinity.py ask <span class="string">"Python에서 리스트 정렬 방법"</span> --strategy vote
+
+<span class="comment"># Python API</span>
+response = tri.ask(<span class="string">"Python에서 리스트 정렬 방법"</span>, strategy=<span class="string">"vote"</span>)
+</code>
+                </div>
+
+                <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(99, 102, 241, 0.1); border-radius: 0.5rem; border-left: 3px solid var(--primary);">
+                    <strong>점수 계산 공식:</strong>
+                    <code style="display: block; margin-top: 0.5rem; color: #d1d5db;">
+                    score = base_score * content_factor * time_factor * agent_weight
+                    </code>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Synthesis Strategy -->
+    <section class="section" id="synthesis">
+        <div class="container" style="max-width: 900px;">
+            <div class="card glass-strong" style="padding: 2rem;">
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                    <div style="font-size: 2.5rem;">🔄</div>
+                    <div>
+                        <h2 style="font-size: 1.75rem; font-weight: 700;">Synthesis Strategy</h2>
+                        <p style="color: #9ca3af;">모든 응답 통합</p>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                    <div>
+                        <h3 style="font-weight: 600; margin-bottom: 1rem;">동작 방식</h3>
+                        <ol style="color: #d1d5db; list-style: decimal; padding-left: 1.25rem;">
+                            <li style="margin-bottom: 0.5rem;">모든 성공한 응답 수집</li>
+                            <li style="margin-bottom: 0.5rem;">각 에이전트의 역할 라벨 부여</li>
+                            <li style="margin-bottom: 0.5rem;">구분선으로 분리된 통합 문서 생성</li>
+                        </ol>
+                    </div>
+                    <div>
+                        <h3 style="font-weight: 600; margin-bottom: 1rem;">최적 사용</h3>
+                        <ul class="feature-list">
+                            <li>다양한 관점이 필요한 분석</li>
+                            <li>복잡한 문제의 종합적 이해</li>
+                            <li>의사결정을 위한 정보 수집</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="code-block">
+<code><span class="comment"># CLI</span>
+python trinity.py ask <span class="string">"마이크로서비스 vs 모놀리식 아키텍처"</span> --strategy synthesis
+
+<span class="comment"># Python API</span>
+response = tri.ask(<span class="string">"마이크로서비스 vs 모놀리식"</span>, strategy=<span class="string">"synthesis"</span>)
+</code>
+                </div>
+
+                <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(59, 130, 246, 0.1); border-radius: 0.5rem; border-left: 3px solid #3b82f6;">
+                    <strong>출력 형식:</strong>
+                    <pre style="margin-top: 0.5rem; color: #d1d5db; font-size: 0.875rem;">
+## 기술 전문가 (Claude)
+[Claude의 분석]
+
+---
+
+## 데이터 분석가 (Gemini)
+[Gemini의 분석]
+
+---
+
+## 창의적 문제해결사 (GPT)
+[GPT의 분석]
+                    </pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Debate Strategy -->
+    <section class="section" id="debate" style="background: rgba(0,0,0,0.2);">
+        <div class="container" style="max-width: 900px;">
+            <div class="card glass-strong" style="padding: 2rem;">
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                    <div style="font-size: 2.5rem;">💬</div>
+                    <div>
+                        <h2 style="font-size: 1.75rem; font-weight: 700;">Debate Strategy</h2>
+                        <p style="color: #9ca3af;">AI간 토론 후 결론</p>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                    <div>
+                        <h3 style="font-weight: 600; margin-bottom: 1rem;">동작 방식</h3>
+                        <ol style="color: #d1d5db; list-style: decimal; padding-left: 1.25rem;">
+                            <li style="margin-bottom: 0.5rem;">초기 응답 수집</li>
+                            <li style="margin-bottom: 0.5rem;">각 AI가 다른 AI의 응답을 평가</li>
+                            <li style="margin-bottom: 0.5rem;">강점/약점 분석 후 개선된 답변 생성</li>
+                            <li style="margin-bottom: 0.5rem;">여러 라운드 반복 가능</li>
+                        </ol>
+                    </div>
+                    <div>
+                        <h3 style="font-weight: 600; margin-bottom: 1rem;">최적 사용</h3>
+                        <ul class="feature-list">
+                            <li>논쟁적인 주제</li>
+                            <li>찬반 의견이 필요한 경우</li>
+                            <li>심층적 분석이 필요한 문제</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="code-block">
+<code><span class="comment"># CLI</span>
+python trinity.py ask <span class="string">"AI 규제의 필요성"</span> --strategy debate
+
+<span class="comment"># Python API</span>
+response = tri.ask(<span class="string">"AI 규제의 필요성"</span>, strategy=<span class="string">"debate"</span>)
+</code>
+                </div>
+
+                <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(139, 92, 246, 0.1); border-radius: 0.5rem; border-left: 3px solid #8b5cf6;">
+                    <strong>토론 프롬프트 구조:</strong>
+                    <pre style="margin-top: 0.5rem; color: #d1d5db; font-size: 0.875rem;">
+원래 질문: {question}
+
+다른 AI의 응답들:
+[Claude]: {claude_response}
+[Gemini]: {gemini_response}
+
+위 응답들을 검토하고:
+1. 각 응답의 강점과 약점을 분석하세요
+2. 누락된 중요한 관점이 있다면 추가하세요
+3. 가장 정확하고 완전한 최종 답변을 제시하세요
+                    </pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Specialist Strategy -->
+    <section class="section" id="specialist">
+        <div class="container" style="max-width: 900px;">
+            <div class="card glass-strong" style="padding: 2rem;">
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                    <div style="font-size: 2.5rem;">🎯</div>
+                    <div>
+                        <h2 style="font-size: 1.75rem; font-weight: 700;">Specialist Strategy</h2>
+                        <p style="color: #9ca3af;">전문가 자동 선택</p>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                    <div>
+                        <h3 style="font-weight: 600; margin-bottom: 1rem;">동작 방식</h3>
+                        <ol style="color: #d1d5db; list-style: decimal; padding-left: 1.25rem;">
+                            <li style="margin-bottom: 0.5rem;">질문에서 키워드 추출</li>
+                            <li style="margin-bottom: 0.5rem;">각 에이전트의 전문 분야와 매칭</li>
+                            <li style="margin-bottom: 0.5rem;">가장 적합한 전문가 선택</li>
+                            <li style="margin-bottom: 0.5rem;">매칭 없으면 모든 응답 통합</li>
+                        </ol>
+                    </div>
+                    <div>
+                        <h3 style="font-weight: 600; margin-bottom: 1rem;">최적 사용</h3>
+                        <ul class="feature-list">
+                            <li>특화된 전문 영역 질문</li>
+                            <li>빠른 전문가 의견이 필요할 때</li>
+                            <li>자동 라우팅을 원할 때</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="code-block">
+<code><span class="comment"># CLI</span>
+python trinity.py ask <span class="string">"이 Python 함수 디버깅 해줘"</span> --strategy specialist
+
+<span class="comment"># Python API</span>
+response = tri.ask(<span class="string">"이 Python 함수 디버깅 해줘"</span>, strategy=<span class="string">"specialist"</span>)
+</code>
+                </div>
+
+                <div style="margin-top: 1.5rem;">
+                    <h3 style="font-weight: 600; margin-bottom: 1rem;">키워드 매핑</h3>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+                        <div style="padding: 1rem; background: rgba(249, 115, 22, 0.1); border-radius: 0.5rem; border: 1px solid rgba(249, 115, 22, 0.3);">
+                            <h4 style="color: #f97316; font-weight: 600; margin-bottom: 0.5rem;">Claude</h4>
+                            <p style="font-size: 0.75rem; color: #9ca3af;">
+                                코드, debug, 디버그, 버그, python, javascript, rust, 함수, 클래스, 알고리즘, 보안, security, 취약점, 리뷰, 리팩토링, 아키텍처, 설계, 시스템
+                            </p>
+                        </div>
+                        <div style="padding: 1rem; background: rgba(59, 130, 246, 0.1); border-radius: 0.5rem; border: 1px solid rgba(59, 130, 246, 0.3);">
+                            <h4 style="color: #3b82f6; font-weight: 600; margin-bottom: 0.5rem;">Gemini</h4>
+                            <p style="font-size: 0.75rem; color: #9ca3af;">
+                                연구, research, 논문, 데이터, 분석, 통계, 팩트, fact, 검증, 이미지, 비디오, 멀티모달, 시장, 트렌드
+                            </p>
+                        </div>
+                        <div style="padding: 1rem; background: rgba(16, 185, 129, 0.1); border-radius: 0.5rem; border: 1px solid rgba(16, 185, 129, 0.3);">
+                            <h4 style="color: #10b981; font-weight: 600; margin-bottom: 0.5rem;">GPT</h4>
+                            <p style="font-size: 0.75rem; color: #9ca3af;">
+                                창의, creative, 아이디어, 브레인스토밍, 전략, strategy, 기획, 마케팅, 스토리, 글쓰기, writing, 컨텐츠, 혁신
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Choosing Strategy -->
+    <section class="section" style="background: rgba(0,0,0,0.2);">
+        <div class="container" style="max-width: 800px;">
+            <h2 class="section-title gradient-text">전략 선택 가이드</h2>
+
+            <div class="glass" style="padding: 2rem; border-radius: 1rem;">
+                <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                    <div style="display: flex; align-items: flex-start; gap: 1rem;">
+                        <div style="width: 40px; height: 40px; background: rgba(99, 102, 241, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">1</div>
+                        <div>
+                            <h3 style="font-weight: 600;">정답이 명확한 질문</h3>
+                            <p style="color: #9ca3af;">→ <strong style="color: white;">Vote</strong> 사용</p>
+                            <p style="font-size: 0.875rem; color: #6b7280;">예: "Python에서 리스트 정렬하는 방법"</p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: flex-start; gap: 1rem;">
+                        <div style="width: 40px; height: 40px; background: rgba(99, 102, 241, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">2</div>
+                        <div>
+                            <h3 style="font-weight: 600;">다양한 관점이 필요한 분석</h3>
+                            <p style="color: #9ca3af;">→ <strong style="color: white;">Synthesis</strong> 사용</p>
+                            <p style="font-size: 0.875rem; color: #6b7280;">예: "마이크로서비스 아키텍처의 장단점"</p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: flex-start; gap: 1rem;">
+                        <div style="width: 40px; height: 40px; background: rgba(99, 102, 241, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">3</div>
+                        <div>
+                            <h3 style="font-weight: 600;">논쟁적이거나 복잡한 주제</h3>
+                            <p style="color: #9ca3af;">→ <strong style="color: white;">Debate</strong> 사용</p>
+                            <p style="font-size: 0.875rem; color: #6b7280;">예: "AI 규제의 필요성"</p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: flex-start; gap: 1rem;">
+                        <div style="width: 40px; height: 40px; background: rgba(99, 102, 241, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">4</div>
+                        <div>
+                            <h3 style="font-weight: 600;">특화된 전문 영역</h3>
+                            <p style="color: #9ca3af;">→ <strong style="color: white;">Specialist</strong> 사용</p>
+                            <p style="font-size: 0.875rem; color: #6b7280;">예: "이 코드의 보안 취약점 분석"</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>
+            <span class="gradient-text" style="font-weight: 600;">AGI Trinity</span> - Multi-Agent AI Orchestrator<br>
+            <span style="font-size: 0.875rem;">Built with Claude Opus 4.5, Gemini 3 Pro, GPT-5.1</span>
+        </p>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

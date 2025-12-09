@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation - AGI Trinity</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xz/fonts@1/serve/plus-jakarta-sans.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .doc-nav {
+            position: sticky;
+            top: 80px;
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
+        }
+        .doc-nav a {
+            display: block;
+            padding: 0.5rem 1rem;
+            color: #9ca3af;
+            text-decoration: none;
+            border-left: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        .doc-nav a:hover,
+        .doc-nav a.active {
+            color: white;
+            border-left-color: var(--primary);
+            background: rgba(99, 102, 241, 0.1);
+        }
+        .doc-section {
+            scroll-margin-top: 100px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header glass">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">T</div>
+                <span class="logo-text gradient-text">AGI Trinity</span>
+            </a>
+
+            <nav class="nav">
+                <a href="index.html">Home</a>
+                <a href="agents.html">Agents</a>
+                <a href="strategies.html">Strategies</a>
+                <a href="demo.html">Demo</a>
+                <a href="docs.html" class="active">Docs</a>
+            </nav>
+
+            <a href="https://github.com/hwkim3330/agi" target="_blank" class="btn btn-primary">
+                GitHub
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div style="display: flex; padding-top: 80px; min-height: 100vh;">
+        <!-- Sidebar -->
+        <aside style="width: 250px; padding: 2rem 1rem; flex-shrink: 0;" class="glass-strong">
+            <nav class="doc-nav">
+                <h3 style="padding: 0 1rem; margin-bottom: 1rem; font-weight: 600; color: #9ca3af; font-size: 0.75rem; text-transform: uppercase;">Getting Started</h3>
+                <a href="#installation">Installation</a>
+                <a href="#quickstart">Quick Start</a>
+                <a href="#configuration">Configuration</a>
+
+                <h3 style="padding: 0 1rem; margin: 1.5rem 0 1rem; font-weight: 600; color: #9ca3af; font-size: 0.75rem; text-transform: uppercase;">API Reference</h3>
+                <a href="#trinity-class">Trinity Class</a>
+                <a href="#ask-method">ask() Method</a>
+                <a href="#response-object">Response Object</a>
+
+                <h3 style="padding: 0 1rem; margin: 1.5rem 0 1rem; font-weight: 600; color: #9ca3af; font-size: 0.75rem; text-transform: uppercase;">CLI</h3>
+                <a href="#cli-usage">CLI Usage</a>
+                <a href="#cli-options">Options</a>
+
+                <h3 style="padding: 0 1rem; margin: 1.5rem 0 1rem; font-weight: 600; color: #9ca3af; font-size: 0.75rem; text-transform: uppercase;">Advanced</h3>
+                <a href="#rust-wasm">Rust/WASM</a>
+                <a href="#project-structure">Project Structure</a>
+            </nav>
+        </aside>
+
+        <!-- Content -->
+        <main style="flex: 1; padding: 2rem 3rem; max-width: 900px;">
+            <!-- Installation -->
+            <section id="installation" class="doc-section" style="margin-bottom: 4rem;">
+                <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 1.5rem;" class="gradient-text">Installation</h1>
+
+                <div class="code-block glass" style="position: relative;">
+                    <button onclick="copyCode(this)" style="position: absolute; top: 0.5rem; right: 0.5rem; padding: 0.25rem 0.5rem; border-radius: 0.25rem; background: rgba(255,255,255,0.1); border: none; color: #9ca3af; cursor: pointer; font-size: 0.75rem;">Copy</button>
+<code><span class="comment"># Clone repository</span>
+git clone https://github.com/hwkim3330/agi.git
+cd agi
+
+<span class="comment"># Install dependencies</span>
+pip install -r requirements.txt
+
+<span class="comment"># (Optional) Build WASM module</span>
+cd wasm-consensus && wasm-pack build --target web && cd ..
+</code>
+                </div>
+
+                <h3 style="font-weight: 600; margin: 2rem 0 1rem;">Requirements</h3>
+                <ul class="feature-list">
+                    <li>Python 3.10+</li>
+                    <li>Rust 1.70+ (for WASM build)</li>
+                    <li>API keys for Claude, Gemini, GPT</li>
+                </ul>
+            </section>
+
+            <!-- Quick Start -->
+            <section id="quickstart" class="doc-section" style="margin-bottom: 4rem;">
+                <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 1.5rem;" class="gradient-text">Quick Start</h1>
+
+                <h3 style="font-weight: 600; margin-bottom: 1rem;">1. Set API Keys</h3>
+                <div class="code-block glass">
+<code>export ANTHROPIC_API_KEY="your-anthropic-key"
+export GOOGLE_API_KEY="your-google-key"
+export OPENAI_API_KEY="your-openai-key"
+</code>
+                </div>
+
+                <h3 style="font-weight: 600; margin: 2rem 0 1rem;">2. Use CLI</h3>
+                <div class="code-block glass">
+<code><span class="comment"># Basic question</span>
+python trinity.py ask "마이크로서비스 아키텍처의 장단점"
+
+<span class="comment"># With strategy</span>
+python trinity.py ask "보안 취약점 분석" --strategy debate
+
+<span class="comment"># Specific agents</span>
+python trinity.py ask "코드 리뷰" --agents claude,gpt
+</code>
+                </div>
+
+                <h3 style="font-weight: 600; margin: 2rem 0 1rem;">3. Use Python API</h3>
+                <div class="code-block glass">
+<code><span class="keyword">from</span> trinity <span class="keyword">import</span> Trinity
+
+<span class="comment"># Initialize</span>
+tri = Trinity()
+
+<span class="comment"># Basic usage</span>
+response = tri.ask(<span class="string">"REST vs GraphQL 비교"</span>)
+<span class="keyword">print</span>(response.content)
+<span class="keyword">print</span>(<span class="string">f"신뢰도: </span>{response.confidence:.1%}<span class="string">"</span>)
+
+<span class="comment"># With strategy</span>
+response = tri.ask(<span class="string">"신규 기능 아이디어"</span>, strategy=<span class="string">"synthesis"</span>)
+</code>
+                </div>
+            </section>
+
+            <!-- Configuration -->
+            <section id="configuration" class="doc-section" style="margin-bottom: 4rem;">
+                <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 1.5rem;" class="gradient-text">Configuration</h1>
+
+                <p style="color: #d1d5db; margin-bottom: 1.5rem;">
+                    <code>config/agents.yaml</code> 파일에서 에이전트 설정을 커스터마이즈할 수 있습니다.
+                </p>
+
+                <div class="code-block glass">
+<code><span class="comment"># config/agents.yaml</span>
+agents:
+  claude:
+    model: <span class="string">"claude-opus-4-5-20251101"</span>
+    max_tokens: 4096
+    temperature: 0.7
+
+  gemini:
+    model: <span class="string">"gemini-3-pro"</span>
+    max_tokens: 4096
+    temperature: 0.7
+
+  gpt:
+    model: <span class="string">"gpt-5.1"</span>
+    max_tokens: 4096
+    temperature: 0.7
+
+consensus:
+  default_strategy: <span class="string">"vote"</span>
+  timeout: 30
+</code>
+                </div>
+            </section>
+
+            <!-- Trinity Class -->
+            <section id="trinity-class" class="doc-section" style="margin-bottom: 4rem;">
+                <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 1.5rem;" class="gradient-text">Trinity Class</h1>
+
+                <div class="code-block glass">
+<code><span class="keyword">class</span> <span class="function">Trinity</span>:
+    <span class="string">"""Multi-Agent AI Orchestrator"""</span>
+
+    <span class="keyword">def</span> <span class="function">__init__</span>(self, config_path: str = <span class="keyword">None</span>):
+        <span class="string">"""
+        Initialize Trinity orchestrator.
+
+        Args:
+            config_path: Path to agents.yaml config file
+        """</span>
+</code>
+                </div>
+
+                <h3 style="font-weight: 600; margin: 2rem 0 1rem;">Parameters</h3>
+                <div class="table-wrapper glass">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Type</th>
+                                <th>Default</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>config_path</code></td>
+                                <td>str</td>
+                                <td>None</td>
+                                <td>Path to custom config file</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ask() Method -->
+            <section id="ask-method" class="doc-section" style="margin-bottom: 4rem;">
+                <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 1.5rem;" class="gradient-text">ask() Method</h1>
+
+                <div class="code-block glass">
+<code><span class="keyword">def</span> <span class="function">ask</span>(
+    self,
+    question: str,
+    strategy: str = <span class="string">"vote"</span>,
+    agents: List[str] = <span class="keyword">None</span>,
+    timeout: int = 30
+) -> TrinityResponse:
+    <span class="string">"""
+    Send question to AI agents and get consensus response.
+
+    Args:
+        question: The question to ask
+        strategy: Consensus strategy (vote, synthesis, debate, specialist)
+        agents: List of agents to use (default: all)
+        timeout: Request timeout in seconds
+
+    Returns:
+        TrinityResponse object with consensus result
+    """</span>
+</code>
+                </div>
+
+                <h3 style="font-weight: 600; margin: 2rem 0 1rem;">Parameters</h3>
+                <div class="table-wrapper glass">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Type</th>
+                                <th>Default</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>question</code></td>
+                                <td>str</td>
+                                <td>required</td>
+                                <td>The question to ask</td>
+                            </tr>
+                            <tr>
+                                <td><code>strategy</code></td>
+                                <td>str</td>
+                                <td>"vote"</td>
+                                <td>vote, synthesis, debate, specialist</td>
+                            </tr>
+                            <tr>
+                                <td><code>agents</code></td>
+                                <td>List[str]</td>
+                                <td>None (all)</td>
+                                <td>["claude", "gemini", "gpt"]</td>
+                            </tr>
+                            <tr>
+                                <td><code>timeout</code></td>
+                                <td>int</td>
+                                <td>30</td>
+                                <td>Timeout in seconds</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Response Object -->
+            <section id="response-object" class="doc-section" style="margin-bottom: 4rem;">
+                <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 1.5rem;" class="gradient-text">Response Object</h1>
+
+                <div class="code-block glass">
+<code><span class="keyword">@dataclass</span>
+<span class="keyword">class</span> <span class="function">TrinityResponse</span>:
+    content: str           <span class="comment"># Final consensus content</span>
+    confidence: float      <span class="comment"># Confidence score (0.0 - 1.0)</span>
+    strategy: str          <span class="comment"># Strategy used</span>
+    agents_used: List[str] <span class="comment"># Agents that responded</span>
+    latency: float         <span class="comment"># Total latency in seconds</span>
+    metadata: Dict         <span class="comment"># Additional metadata</span>
+</code>
+                </div>
+
+                <h3 style="font-weight: 600; margin: 2rem 0 1rem;">Example</h3>
+                <div class="code-block glass">
+<code>response = tri.ask(<span class="string">"Python 리스트 정렬 방법"</span>)
+
+<span class="keyword">print</span>(response.content)      <span class="comment"># "리스트를 정렬하려면..."</span>
+<span class="keyword">print</span>(response.confidence)   <span class="comment"># 0.95</span>
+<span class="keyword">print</span>(response.strategy)     <span class="comment"># "vote"</span>
+<span class="keyword">print</span>(response.agents_used)  <span class="comment"># ["claude", "gemini", "gpt"]</span>
+<span class="keyword">print</span>(response.latency)      <span class="comment"># 2.34</span>
+</code>
+                </div>
+            </section>
+
+            <!-- CLI Usage -->
+            <section id="cli-usage" class="doc-section" style="margin-bottom: 4rem;">
+                <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 1.5rem;" class="gradient-text">CLI Usage</h1>
+
+                <div class="code-block glass">
+<code><span class="comment"># Basic</span>
+python trinity.py ask <span class="string">"질문"</span>
+
+<span class="comment"># With options</span>
+python trinity.py ask <span class="string">"질문"</span> --strategy synthesis --agents claude,gpt
+
+<span class="comment"># Help</span>
+python trinity.py --help
+</code>
+                </div>
+            </section>
+
+            <!-- CLI Options -->
+            <section id="cli-options" class="doc-section" style="margin-bottom: 4rem;">
+                <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 1.5rem;" class="gradient-text">CLI Options</h1>
+
+                <div class="table-wrapper glass">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Option</th>
+                                <th>Short</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>--strategy</code></td>
+                                <td><code>-s</code></td>
+                                <td>Consensus strategy</td>
+                            </tr>
+                            <tr>
+                                <td><code>--agents</code></td>
+                                <td><code>-a</code></td>
+                                <td>Comma-separated agent list</td>
+                            </tr>
+                            <tr>
+                                <td><code>--timeout</code></td>
+                                <td><code>-t</code></td>
+                                <td>Request timeout (seconds)</td>
+                            </tr>
+                            <tr>
+                                <td><code>--verbose</code></td>
+                                <td><code>-v</code></td>
+                                <td>Verbose output</td>
+                            </tr>
+                            <tr>
+                                <td><code>--json</code></td>
+                                <td><code>-j</code></td>
+                                <td>Output as JSON</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Rust/WASM -->
+            <section id="rust-wasm" class="doc-section" style="margin-bottom: 4rem;">
+                <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 1.5rem;" class="gradient-text">Rust/WASM</h1>
+
+                <p style="color: #d1d5db; margin-bottom: 1.5rem;">
+                    합의 알고리즘은 Rust로 구현되어 고성능을 제공합니다.
+                </p>
+
+                <h3 style="font-weight: 600; margin-bottom: 1rem;">Build WASM Module</h3>
+                <div class="code-block glass">
+<code>cd wasm-consensus
+wasm-pack build --target web
+</code>
+                </div>
+
+                <h3 style="font-weight: 600; margin: 2rem 0 1rem;">Performance Comparison</h3>
+                <div class="table-wrapper glass">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Operation</th>
+                                <th>Python</th>
+                                <th>Rust</th>
+                                <th>Improvement</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Text Similarity</td>
+                                <td>450ms</td>
+                                <td>12ms</td>
+                                <td><span class="badge badge-success">37x</span></td>
+                            </tr>
+                            <tr>
+                                <td>Consensus Calc</td>
+                                <td>280ms</td>
+                                <td>8ms</td>
+                                <td><span class="badge badge-success">35x</span></td>
+                            </tr>
+                            <tr>
+                                <td>Response Parse</td>
+                                <td>120ms</td>
+                                <td>5ms</td>
+                                <td><span class="badge badge-success">24x</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Project Structure -->
+            <section id="project-structure" class="doc-section" style="margin-bottom: 4rem;">
+                <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 1.5rem;" class="gradient-text">Project Structure</h1>
+
+                <div class="code-block glass">
+<code>agi/
+├── trinity.py              <span class="comment"># CLI entrypoint</span>
+├── core/
+│   ├── orchestrator.py     <span class="comment"># Main orchestrator</span>
+│   ├── consensus.py        <span class="comment"># Consensus engine</span>
+│   ├── router.py           <span class="comment"># Smart router</span>
+│   └── session.py          <span class="comment"># Session management</span>
+├── agents/
+│   ├── base.py             <span class="comment"># Base adapter</span>
+│   ├── claude.py           <span class="comment"># Claude API</span>
+│   ├── gemini.py           <span class="comment"># Gemini API</span>
+│   └── openai.py           <span class="comment"># OpenAI API</span>
+├── strategies/
+│   ├── vote.py             <span class="comment"># Vote strategy</span>
+│   ├── synthesis.py        <span class="comment"># Synthesis strategy</span>
+│   ├── debate.py           <span class="comment"># Debate strategy</span>
+│   └── specialist.py       <span class="comment"># Specialist strategy</span>
+├── wasm-consensus/         <span class="comment"># Rust WASM module</span>
+│   ├── src/
+│   │   ├── lib.rs
+│   │   ├── consensus.rs
+│   │   └── similarity.rs
+│   └── Cargo.toml
+└── config/
+    └── agents.yaml
+</code>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>
+            <span class="gradient-text" style="font-weight: 600;">AGI Trinity</span> - Multi-Agent AI Orchestrator<br>
+            <span style="font-size: 0.875rem;">Built with Claude Opus 4.5, Gemini 3 Pro, GPT-5.1</span>
+        </p>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+        // Highlight active section in nav
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    document.querySelectorAll('.doc-nav a').forEach(a => a.classList.remove('active'));
+                    const activeLink = document.querySelector(`.doc-nav a[href="#${entry.target.id}"]`);
+                    if (activeLink) activeLink.classList.add('active');
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('.doc-section').forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Demo - AGI Trinity</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xz/fonts@1/serve/plus-jakarta-sans.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .typing-indicator span {
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        .agent-response {
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header glass">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">T</div>
+                <span class="logo-text gradient-text">AGI Trinity</span>
+            </a>
+
+            <nav class="nav">
+                <a href="index.html">Home</a>
+                <a href="agents.html">Agents</a>
+                <a href="strategies.html">Strategies</a>
+                <a href="demo.html" class="active">Demo</a>
+                <a href="docs.html">Docs</a>
+            </nav>
+
+            <a href="https://github.com/hwkim3330/agi" target="_blank" class="btn btn-primary">
+                GitHub
+            </a>
+        </div>
+    </header>
+
+    <!-- Demo Section -->
+    <section style="padding-top: 100px; min-height: 100vh;">
+        <div class="container" style="max-width: 1000px; padding: 2rem;">
+            <h1 style="font-size: 2.5rem; font-weight: 700; text-align: center; margin-bottom: 0.5rem;" class="gradient-text">Live Demo</h1>
+            <p style="text-align: center; color: #9ca3af; margin-bottom: 2rem;">
+                시뮬레이션 모드로 Trinity의 멀티에이전트 합의 과정을 체험해보세요
+            </p>
+
+            <!-- Input Section -->
+            <div class="glass" style="border-radius: 1rem; padding: 1.5rem; margin-bottom: 2rem;">
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; color: #9ca3af; font-size: 0.875rem; margin-bottom: 0.5rem;">질문 입력</label>
+                    <input type="text" id="prompt-input"
+                           placeholder="예: 마이크로서비스 아키텍처의 장단점을 분석해주세요"
+                           style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 0.75rem; padding: 1rem; color: white; font-size: 1rem;">
+                </div>
+
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
+                    <!-- Strategy -->
+                    <div>
+                        <label style="display: block; color: #9ca3af; font-size: 0.75rem; margin-bottom: 0.5rem;">합의 전략</label>
+                        <select id="strategy-select" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 0.5rem; padding: 0.5rem 1rem; color: white;">
+                            <option value="vote">Vote</option>
+                            <option value="synthesis">Synthesis</option>
+                            <option value="debate">Debate</option>
+                            <option value="specialist">Specialist</option>
+                        </select>
+                    </div>
+
+                    <!-- Agents -->
+                    <div>
+                        <label style="display: block; color: #9ca3af; font-size: 0.75rem; margin-bottom: 0.5rem;">에이전트</label>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <label style="display: flex; align-items: center; gap: 0.25rem; cursor: pointer;">
+                                <input type="checkbox" id="agent-claude" checked style="accent-color: #f97316;">
+                                <span style="color: #f97316; font-size: 0.875rem;">Claude</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.25rem; cursor: pointer;">
+                                <input type="checkbox" id="agent-gemini" checked style="accent-color: #3b82f6;">
+                                <span style="color: #3b82f6; font-size: 0.875rem;">Gemini</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.25rem; cursor: pointer;">
+                                <input type="checkbox" id="agent-gpt" checked style="accent-color: #10b981;">
+                                <span style="color: #10b981; font-size: 0.875rem;">GPT</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <button onclick="runDemo()" id="run-btn" class="btn btn-primary" style="margin-left: auto;">
+                        실행
+                    </button>
+                </div>
+
+                <!-- Example Questions -->
+                <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1);">
+                    <span style="color: #6b7280; font-size: 0.75rem;">예시 질문:</span>
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem;">
+                        <button onclick="setQuestion('마이크로서비스 아키텍처의 장단점')" style="background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.3); border-radius: 9999px; padding: 0.25rem 0.75rem; color: #a5b4fc; font-size: 0.75rem; cursor: pointer;">아키텍처 분석</button>
+                        <button onclick="setQuestion('Python에서 async/await 사용법')" style="background: rgba(249,115,22,0.1); border: 1px solid rgba(249,115,22,0.3); border-radius: 9999px; padding: 0.25rem 0.75rem; color: #fdba74; font-size: 0.75rem; cursor: pointer;">코드 질문</button>
+                        <button onclick="setQuestion('2024년 AI 시장 트렌드 분석')" style="background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.3); border-radius: 9999px; padding: 0.25rem 0.75rem; color: #93c5fd; font-size: 0.75rem; cursor: pointer;">시장 분석</button>
+                        <button onclick="setQuestion('새로운 SaaS 제품 아이디어')" style="background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); border-radius: 9999px; padding: 0.25rem 0.75rem; color: #6ee7b7; font-size: 0.75rem; cursor: pointer;">창의적 아이디어</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Agent Responses -->
+            <div id="agents-section" style="display: none; margin-bottom: 2rem;">
+                <h3 style="font-weight: 600; margin-bottom: 1rem; color: #9ca3af;">에이전트 응답</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
+                    <!-- Claude -->
+                    <div id="claude-response" class="glass agent-response" style="border-radius: 1rem; padding: 1rem; border-left: 3px solid #f97316; display: none;">
+                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+                            <div style="width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #f97316, #dc2626); display: flex; align-items: center; justify-content: center; font-size: 0.875rem;">C</div>
+                            <div>
+                                <div style="font-weight: 600;">Claude</div>
+                                <div style="font-size: 0.75rem; color: #9ca3af;" id="claude-latency">-</div>
+                            </div>
+                        </div>
+                        <div id="claude-content" style="font-size: 0.875rem; color: #d1d5db; max-height: 200px; overflow-y: auto;"></div>
+                    </div>
+
+                    <!-- Gemini -->
+                    <div id="gemini-response" class="glass agent-response" style="border-radius: 1rem; padding: 1rem; border-left: 3px solid #3b82f6; display: none;">
+                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+                            <div style="width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #3b82f6, #06b6d4); display: flex; align-items: center; justify-content: center; font-size: 0.875rem;">G</div>
+                            <div>
+                                <div style="font-weight: 600;">Gemini</div>
+                                <div style="font-size: 0.75rem; color: #9ca3af;" id="gemini-latency">-</div>
+                            </div>
+                        </div>
+                        <div id="gemini-content" style="font-size: 0.875rem; color: #d1d5db; max-height: 200px; overflow-y: auto;"></div>
+                    </div>
+
+                    <!-- GPT -->
+                    <div id="gpt-response" class="glass agent-response" style="border-radius: 1rem; padding: 1rem; border-left: 3px solid #10b981; display: none;">
+                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+                            <div style="width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #10b981, #14b8a6); display: flex; align-items: center; justify-content: center; font-size: 0.875rem;">G</div>
+                            <div>
+                                <div style="font-weight: 600;">GPT</div>
+                                <div style="font-size: 0.75rem; color: #9ca3af;" id="gpt-latency">-</div>
+                            </div>
+                        </div>
+                        <div id="gpt-content" style="font-size: 0.875rem; color: #d1d5db; max-height: 200px; overflow-y: auto;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loading -->
+            <div id="loading" style="display: none; text-align: center; padding: 3rem;">
+                <div class="typing-indicator" style="display: inline-flex; gap: 0.25rem;">
+                    <span style="width: 10px; height: 10px; background: var(--primary); border-radius: 50%;"></span>
+                    <span style="width: 10px; height: 10px; background: var(--primary); border-radius: 50%;"></span>
+                    <span style="width: 10px; height: 10px; background: var(--primary); border-radius: 50%;"></span>
+                </div>
+                <p style="color: #9ca3af; margin-top: 1rem;" id="loading-text">에이전트들이 분석 중...</p>
+            </div>
+
+            <!-- Consensus Result -->
+            <div id="result-section" style="display: none;">
+                <div class="glass-strong" style="border-radius: 1rem; padding: 1.5rem;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                        <h3 style="font-weight: 600;">Trinity 합의 결과</h3>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <span id="confidence-badge" class="badge badge-success">신뢰도: -</span>
+                            <span id="strategy-badge" class="badge badge-info">전략: -</span>
+                        </div>
+                    </div>
+                    <div id="result-content" style="background: rgba(0,0,0,0.3); border-radius: 0.75rem; padding: 1rem; white-space: pre-wrap; color: #d1d5db; max-height: 400px; overflow-y: auto;"></div>
+                </div>
+            </div>
+
+            <!-- Metrics -->
+            <div id="metrics-section" style="display: none; margin-top: 2rem;">
+                <h3 style="font-weight: 600; margin-bottom: 1rem; color: #9ca3af;">Performance Metrics</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                    <div class="glass" style="border-radius: 0.75rem; padding: 1rem; text-align: center;">
+                        <div style="font-size: 2rem; font-weight: 700;" id="total-latency" class="gradient-text">0ms</div>
+                        <div style="font-size: 0.75rem; color: #9ca3af;">총 응답 시간</div>
+                    </div>
+                    <div class="glass" style="border-radius: 0.75rem; padding: 1rem; text-align: center;">
+                        <div style="font-size: 2rem; font-weight: 700; color: #10b981;" id="agents-count">0/3</div>
+                        <div style="font-size: 0.75rem; color: #9ca3af;">응답 에이전트</div>
+                    </div>
+                    <div class="glass" style="border-radius: 0.75rem; padding: 1rem;">
+                        <div style="font-size: 0.75rem; color: #9ca3af; margin-bottom: 0.5rem;">응답 시간 비교</div>
+                        <canvas id="latency-chart" height="60"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>
+            <span class="gradient-text" style="font-weight: 600;">AGI Trinity</span> - Multi-Agent AI Orchestrator<br>
+            <span style="font-size: 0.875rem;">Built with Claude Opus 4.5, Gemini 3 Pro, GPT-5.1</span>
+        </p>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+        let latencyChart = null;
+
+        function setQuestion(q) {
+            document.getElementById('prompt-input').value = q;
+        }
+
+        async function runDemo() {
+            const prompt = document.getElementById('prompt-input').value;
+            if (!prompt) {
+                alert('질문을 입력해주세요');
+                return;
+            }
+
+            const strategy = document.getElementById('strategy-select').value;
+            const useClaude = document.getElementById('agent-claude').checked;
+            const useGemini = document.getElementById('agent-gemini').checked;
+            const useGpt = document.getElementById('agent-gpt').checked;
+
+            // Reset UI
+            document.getElementById('agents-section').style.display = 'none';
+            document.getElementById('result-section').style.display = 'none';
+            document.getElementById('metrics-section').style.display = 'none';
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('run-btn').disabled = true;
+
+            const agents = [];
+            if (useClaude) agents.push('claude');
+            if (useGemini) agents.push('gemini');
+            if (useGpt) agents.push('gpt');
+
+            // Simulate agent responses
+            const responses = [];
+            const startTime = Date.now();
+
+            document.getElementById('agents-section').style.display = 'block';
+
+            for (const agent of agents) {
+                document.getElementById('loading-text').textContent = `${agent} 응답 대기 중...`;
+                await sleep(Math.random() * 1500 + 500);
+
+                const latency = (Math.random() * 2 + 0.5).toFixed(2);
+                const response = generateMockResponse(agent, prompt, strategy);
+
+                responses.push({
+                    agent,
+                    content: response,
+                    latency: parseFloat(latency),
+                    success: Math.random() > 0.05
+                });
+
+                // Show agent response
+                document.getElementById(`${agent}-response`).style.display = 'block';
+                document.getElementById(`${agent}-latency`).textContent = `${(latency * 1000).toFixed(0)}ms`;
+                document.getElementById(`${agent}-content`).textContent = response;
+            }
+
+            // Calculate consensus
+            document.getElementById('loading-text').textContent = '합의 계산 중...';
+            await sleep(500);
+
+            const totalLatency = Date.now() - startTime;
+            const consensus = calculateConsensus(responses, strategy, prompt);
+
+            // Show results
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('result-section').style.display = 'block';
+            document.getElementById('metrics-section').style.display = 'block';
+            document.getElementById('run-btn').disabled = false;
+
+            document.getElementById('result-content').textContent = consensus.content;
+            document.getElementById('confidence-badge').textContent = `신뢰도: ${(consensus.confidence * 100).toFixed(0)}%`;
+            document.getElementById('strategy-badge').textContent = `전략: ${strategy}`;
+            document.getElementById('total-latency').textContent = `${totalLatency}ms`;
+            document.getElementById('agents-count').textContent = `${responses.filter(r => r.success).length}/${agents.length}`;
+
+            // Update chart
+            updateLatencyChart(responses);
+        }
+
+        function generateMockResponse(agent, prompt, strategy) {
+            const templates = {
+                claude: `[Claude Opus 4.5 분석]
+
+"${prompt}"에 대한 기술적 분석:
+
+1. 아키텍처 관점
+- 구조적 장점과 단점 분석
+- 확장성 고려사항
+- 유지보수성 평가
+
+2. 구현 세부사항
+- 권장 기술 스택
+- 모범 사례 적용
+- 잠재적 문제점
+
+3. 보안 고려사항
+- 취약점 분석
+- 보안 권장사항
+
+결론: 종합적인 기술 검토 완료.`,
+
+                gemini: `[Gemini 3 Pro 리서치]
+
+"${prompt}"에 대한 데이터 기반 분석:
+
+📊 시장 데이터
+- 관련 통계 및 트렌드
+- 업계 동향 분석
+- 경쟁 환경 파악
+
+🔍 팩트 체킹
+- 검증된 정보 기반
+- 신뢰할 수 있는 출처
+- 최신 데이터 반영
+
+📈 분석 결과
+- 정량적 평가
+- 정성적 인사이트
+- 종합 권장사항
+
+Deep Think 추론을 통해 도출된 결론입니다.`,
+
+                gpt: `[GPT-5.1 창의적 제안]
+
+"${prompt}"에 대한 혁신적 접근:
+
+💡 아이디어 1: 새로운 관점
+- 기존 방식의 재해석
+- 창의적 대안 제시
+- 차별화 포인트
+
+💡 아이디어 2: 전략적 접근
+- 단계별 실행 계획
+- 리스크 관리 방안
+- 성공 지표 설정
+
+💡 아이디어 3: 미래 비전
+- 장기적 발전 방향
+- 확장 가능성
+- 혁신적 기회
+
+통합 추론을 통한 종합 제안입니다.`
+            };
+
+            return templates[agent] || `${agent}의 응답`;
+        }
+
+        function calculateConsensus(responses, strategy, prompt) {
+            const successful = responses.filter(r => r.success);
+            const confidence = successful.length / responses.length;
+
+            let content;
+            switch (strategy) {
+                case 'synthesis':
+                    content = successful.map(r => r.content).join('\n\n---\n\n');
+                    break;
+                case 'debate':
+                    content = `## 종합 토론 결과\n\n각 AI의 관점을 종합한 결과입니다:\n\n${successful.map(r => r.content).join('\n\n')}`;
+                    break;
+                case 'specialist':
+                    // Auto-select based on keywords
+                    let specialist = 'claude';
+                    if (prompt.includes('시장') || prompt.includes('분석') || prompt.includes('데이터')) {
+                        specialist = 'gemini';
+                    } else if (prompt.includes('아이디어') || prompt.includes('창의') || prompt.includes('전략')) {
+                        specialist = 'gpt';
+                    }
+                    const specialistResponse = successful.find(r => r.agent === specialist) || successful[0];
+                    content = `[Specialist: ${specialist} 선택]\n\n${specialistResponse?.content || 'No response'}`;
+                    break;
+                default: // vote
+                    const best = successful.reduce((a, b) => a.content.length > b.content.length ? a : b, successful[0]);
+                    content = `[Vote 승자: ${best?.agent}]\n\n${best?.content || 'No response'}`;
+            }
+
+            return { content, confidence, strategy };
+        }
+
+        function updateLatencyChart(responses) {
+            const ctx = document.getElementById('latency-chart').getContext('2d');
+
+            if (latencyChart) {
+                latencyChart.destroy();
+            }
+
+            latencyChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: responses.map(r => r.agent),
+                    datasets: [{
+                        data: responses.map(r => r.latency * 1000),
+                        backgroundColor: responses.map(r => {
+                            switch (r.agent) {
+                                case 'claude': return 'rgba(249, 115, 22, 0.7)';
+                                case 'gemini': return 'rgba(59, 130, 246, 0.7)';
+                                case 'gpt': return 'rgba(16, 185, 129, 0.7)';
+                                default: return 'rgba(99, 102, 241, 0.7)';
+                            }
+                        })
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { ticks: { color: '#9ca3af' }, grid: { display: false } },
+                        y: { ticks: { color: '#9ca3af' }, grid: { color: 'rgba(255,255,255,0.1)' } }
+                    }
+                }
+            });
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+    </script>
+</body>
+</html>

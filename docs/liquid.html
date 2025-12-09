@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liquid AI - Continuous Learning System</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xz/fonts@1/serve/plus-jakarta-sans.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .liquid-bg {
+            background: linear-gradient(135deg, #020617 0%, #0f172a 50%, #1e1b4b 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .liquid-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.3;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .blob-1 {
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+            top: -100px;
+            left: -100px;
+            animation-delay: 0s;
+        }
+
+        .blob-2 {
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(135deg, #f59e0b, #ef4444);
+            bottom: -50px;
+            right: -50px;
+            animation-delay: 2s;
+        }
+
+        .blob-3 {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, #10b981, #3b82f6);
+            top: 50%;
+            left: 50%;
+            animation-delay: 4s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+
+        .neuron-canvas {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+        }
+
+        .state-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse-state 2s infinite;
+        }
+
+        @keyframes pulse-state {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 currentColor; }
+            50% { opacity: 0.7; box-shadow: 0 0 10px 3px currentColor; }
+        }
+
+        .learning-bar {
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .learning-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #8b5cf6, #06b6d4);
+            transition: width 0.3s ease;
+        }
+
+        .memory-cell {
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 8px;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.75rem;
+            transition: all 0.3s;
+        }
+
+        .memory-cell:hover {
+            background: rgba(139, 92, 246, 0.2);
+            border-color: rgba(139, 92, 246, 0.5);
+        }
+
+        .memory-cell.active {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: rgba(16, 185, 129, 0.5);
+        }
+
+        .ode-equation {
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            background: rgba(0,0,0,0.3);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.25rem;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            background: rgba(255,255,255,0.05);
+            color: #9ca3af;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+        }
+
+        .tab-btn:hover:not(.active) {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .agent-state {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 2px;
+        }
+
+        .state-cell {
+            aspect-ratio: 1;
+            border-radius: 2px;
+            transition: background 0.3s;
+        }
+    </style>
+</head>
+<body class="liquid-bg">
+    <!-- Liquid Background Blobs -->
+    <div class="liquid-blob blob-1"></div>
+    <div class="liquid-blob blob-2"></div>
+    <div class="liquid-blob blob-3"></div>
+
+    <!-- Header -->
+    <header class="header glass" style="position: relative; z-index: 100;">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <div class="logo-icon" style="background: linear-gradient(135deg, #06b6d4, #8b5cf6);">L</div>
+                <span class="logo-text gradient-text">Liquid AI</span>
+                <span style="font-size: 0.7rem; padding: 0.2rem 0.5rem; background: rgba(6, 182, 212, 0.2); color: #06b6d4; border-radius: 9999px; margin-left: 0.5rem;">Continuous Learning</span>
+            </a>
+
+            <nav class="nav">
+                <a href="index.html">Trinity</a>
+                <a href="liquid.html" class="active">Liquid AI</a>
+                <a href="demo.html">Demo</a>
+            </nav>
+
+            <a href="https://github.com/hwkim3330/agi" target="_blank" class="btn btn-primary">
+                GitHub
+            </a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" style="position: relative; z-index: 1;">
+        <div class="container">
+            <h1>
+                <span class="gradient-text">Liquid Neural Networks</span><br>
+                <span style="color: #d1d5db; font-size: 0.5em;">Continuous Learning & Adaptation</span>
+            </h1>
+            <p style="max-width: 600px; margin: 0 auto 2rem;">
+                시간에 따라 동적으로 변화하는 ODE 기반 신경망<br>
+                실시간 적응 학습으로 환경 변화에 즉시 대응
+            </p>
+
+            <!-- ODE Equation -->
+            <div class="ode-equation glass" style="max-width: 500px; margin: 0 auto 2rem;">
+                <div style="color: #9ca3af; font-size: 0.75rem; margin-bottom: 0.5rem;">Liquid Time-Constant (LTC) Neuron</div>
+                <span style="color: #8b5cf6;">dx/dt</span> =
+                <span style="color: #f59e0b;">-x/τ</span> +
+                <span style="color: #10b981;">f(x, I, t)</span>
+            </div>
+
+            <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+                <button onclick="startLearning()" class="btn btn-primary" id="btn-start">
+                    Start Learning
+                </button>
+                <button onclick="resetSystem()" class="btn btn-secondary">
+                    Reset
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Interactive Section -->
+    <section class="section" style="position: relative; z-index: 1;">
+        <div class="container">
+            <!-- Tabs -->
+            <div style="display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 2rem;">
+                <button onclick="showTab('network')" class="tab-btn active" id="tab-network">Neural Network</button>
+                <button onclick="showTab('memory')" class="tab-btn" id="tab-memory">Working Memory</button>
+                <button onclick="showTab('agents')" class="tab-btn" id="tab-agents">Agent States</button>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 350px; gap: 2rem; align-items: start;">
+                <!-- Left: Visualization -->
+                <div class="glass" style="border-radius: 1rem; padding: 1.5rem;">
+                    <!-- Network Tab -->
+                    <div id="panel-network">
+                        <h2 style="font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <span class="state-indicator" style="color: #8b5cf6;"></span>
+                            Liquid Neural Network
+                        </h2>
+                        <canvas id="network-canvas" class="neuron-canvas" width="700" height="400"></canvas>
+                        <div style="margin-top: 1rem; display: flex; justify-content: space-between; font-size: 0.75rem; color: #6b7280;">
+                            <span>Neurons: <span id="neuron-count">64</span></span>
+                            <span>Synapses: <span id="synapse-count">256</span></span>
+                            <span>Time: <span id="time-step">0</span>s</span>
+                        </div>
+                    </div>
+
+                    <!-- Memory Tab -->
+                    <div id="panel-memory" style="display: none;">
+                        <h2 style="font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <span class="state-indicator" style="color: #06b6d4;"></span>
+                            Working Memory
+                        </h2>
+                        <div id="memory-container" style="max-height: 400px; overflow-y: auto;">
+                            <div class="memory-cell">시스템 초기화...</div>
+                        </div>
+                    </div>
+
+                    <!-- Agents Tab -->
+                    <div id="panel-agents" style="display: none;">
+                        <h2 style="font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <span class="state-indicator" style="color: #10b981;"></span>
+                            Agent Hidden States
+                        </h2>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+                            <!-- Claude -->
+                            <div style="text-align: center;">
+                                <div style="font-size: 0.875rem; color: #f97316; margin-bottom: 0.5rem;">Claude</div>
+                                <div id="claude-state" class="agent-state"></div>
+                                <div style="font-size: 0.65rem; color: #6b7280; margin-top: 0.25rem;">State: <span id="claude-state-val">0.00</span></div>
+                            </div>
+                            <!-- Gemini -->
+                            <div style="text-align: center;">
+                                <div style="font-size: 0.875rem; color: #3b82f6; margin-bottom: 0.5rem;">Gemini</div>
+                                <div id="gemini-state" class="agent-state"></div>
+                                <div style="font-size: 0.65rem; color: #6b7280; margin-top: 0.25rem;">State: <span id="gemini-state-val">0.00</span></div>
+                            </div>
+                            <!-- GPT -->
+                            <div style="text-align: center;">
+                                <div style="font-size: 0.875rem; color: #10b981; margin-bottom: 0.5rem;">GPT</div>
+                                <div id="gpt-state" class="agent-state"></div>
+                                <div style="font-size: 0.65rem; color: #6b7280; margin-top: 0.25rem;">State: <span id="gpt-state-val">0.00</span></div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 1.5rem;">
+                            <h3 style="font-size: 0.875rem; color: #9ca3af; margin-bottom: 0.5rem;">Consensus State</h3>
+                            <canvas id="consensus-canvas" class="neuron-canvas" width="700" height="150"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Controls & Info -->
+                <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                    <!-- Learning Progress -->
+                    <div class="glass" style="border-radius: 1rem; padding: 1.5rem;">
+                        <h3 style="font-weight: 700; margin-bottom: 1rem;">Learning Progress</h3>
+
+                        <div style="margin-bottom: 1rem;">
+                            <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 0.25rem;">
+                                <span>Adaptation</span>
+                                <span id="adapt-val">0%</span>
+                            </div>
+                            <div class="learning-bar">
+                                <div id="adapt-bar" class="learning-progress" style="width: 0%;"></div>
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 1rem;">
+                            <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 0.25rem;">
+                                <span>Memory Consolidation</span>
+                                <span id="memory-val">0%</span>
+                            </div>
+                            <div class="learning-bar">
+                                <div id="memory-bar" class="learning-progress" style="width: 0%; background: linear-gradient(90deg, #06b6d4, #10b981);"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 0.25rem;">
+                                <span>Consensus Convergence</span>
+                                <span id="consensus-val">0%</span>
+                            </div>
+                            <div class="learning-bar">
+                                <div id="consensus-bar" class="learning-progress" style="width: 0%; background: linear-gradient(90deg, #f59e0b, #ef4444);"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- System Parameters -->
+                    <div class="glass" style="border-radius: 1rem; padding: 1.5rem;">
+                        <h3 style="font-weight: 700; margin-bottom: 1rem;">Parameters</h3>
+
+                        <div style="margin-bottom: 1rem;">
+                            <label style="font-size: 0.75rem; color: #6b7280;">Learning Rate (τ)</label>
+                            <input type="range" id="lr-slider" min="0.001" max="0.1" step="0.001" value="0.01"
+                                   style="width: 100%; accent-color: #8b5cf6;"
+                                   onchange="updateLR(this.value)">
+                            <div style="display: flex; justify-content: space-between; font-size: 0.65rem; color: #6b7280;">
+                                <span>0.001</span>
+                                <span id="lr-val">0.01</span>
+                                <span>0.1</span>
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 1rem;">
+                            <label style="font-size: 0.75rem; color: #6b7280;">Time Constant</label>
+                            <input type="range" id="tau-slider" min="0.1" max="2.0" step="0.1" value="1.0"
+                                   style="width: 100%; accent-color: #06b6d4;"
+                                   onchange="updateTau(this.value)">
+                            <div style="display: flex; justify-content: space-between; font-size: 0.65rem; color: #6b7280;">
+                                <span>0.1</span>
+                                <span id="tau-val">1.0</span>
+                                <span>2.0</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label style="font-size: 0.75rem; color: #6b7280;">Network Density</label>
+                            <input type="range" id="density-slider" min="0.1" max="1.0" step="0.1" value="0.5"
+                                   style="width: 100%; accent-color: #10b981;"
+                                   onchange="updateDensity(this.value)">
+                            <div style="display: flex; justify-content: space-between; font-size: 0.65rem; color: #6b7280;">
+                                <span>Sparse</span>
+                                <span id="density-val">0.5</span>
+                                <span>Dense</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Input -->
+                    <div class="glass" style="border-radius: 1rem; padding: 1.5rem;">
+                        <h3 style="font-weight: 700; margin-bottom: 1rem;">Input Signal</h3>
+                        <textarea id="input-text" placeholder="Enter input for the network to learn from..."
+                                  style="width: 100%; height: 80px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 0.75rem; color: white; resize: none; font-size: 0.875rem;"></textarea>
+                        <button onclick="feedInput()" class="btn btn-primary" style="margin-top: 0.5rem; width: 100%;">
+                            Feed Input
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="section" style="background: rgba(0,0,0,0.3); position: relative; z-index: 1;">
+        <div class="container">
+            <h2 class="section-title gradient-text">Liquid AI Features</h2>
+
+            <div class="card-grid">
+                <div class="card glass">
+                    <div style="font-size: 2rem; margin-bottom: 1rem;">🌊</div>
+                    <h3 style="font-weight: 700; margin-bottom: 0.5rem;">Dynamic Weights</h3>
+                    <p style="color: #9ca3af; font-size: 0.875rem;">
+                        ODE 기반 시간 변화 가중치로 입력에 따라 실시간으로 네트워크 구조가 변화
+                    </p>
+                </div>
+
+                <div class="card glass">
+                    <div style="font-size: 2rem; margin-bottom: 1rem;">🧠</div>
+                    <h3 style="font-weight: 700; margin-bottom: 0.5rem;">Continuous Learning</h3>
+                    <p style="color: #9ca3af; font-size: 0.875rem;">
+                        재학습 없이 새로운 정보를 지속적으로 통합하여 catastrophic forgetting 방지
+                    </p>
+                </div>
+
+                <div class="card glass">
+                    <div style="font-size: 2rem; margin-bottom: 1rem;">⚡</div>
+                    <h3 style="font-weight: 700; margin-bottom: 0.5rem;">Efficient</h3>
+                    <p style="color: #9ca3af; font-size: 0.875rem;">
+                        19개의 뉴런으로 100K+ 파라미터 모델과 동등한 성능 (MIT CSAIL 연구)
+                    </p>
+                </div>
+
+                <div class="card glass">
+                    <div style="font-size: 2rem; margin-bottom: 1rem;">🔄</div>
+                    <h3 style="font-weight: 700; margin-bottom: 0.5rem;">Adaptive</h3>
+                    <p style="color: #9ca3af; font-size: 0.875rem;">
+                        환경 변화에 즉시 적응하여 드리프트와 분포 변화에 강건
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer" style="position: relative; z-index: 1;">
+        <p>
+            <span class="gradient-text" style="font-weight: 600;">Liquid AI</span> - Continuous Learning System<br>
+            <span style="font-size: 0.875rem;">Based on Liquid Time-Constant Networks</span>
+        </p>
+        <p style="margin-top: 1rem; font-size: 0.75rem; color: #6b7280;">
+            Inspired by MIT CSAIL research on Liquid Neural Networks
+        </p>
+    </footer>
+
+    <script>
+        // Liquid Neural Network Simulation
+        class LiquidNeuron {
+            constructor(id, x, y) {
+                this.id = id;
+                this.x = x;
+                this.y = y;
+                this.state = Math.random() * 0.5;
+                this.tau = 1.0;
+                this.connections = [];
+                this.inputWeight = Math.random() * 2 - 1;
+            }
+
+            update(input, dt, learningRate) {
+                // LTC ODE: dx/dt = -x/τ + f(x, I)
+                let synapticInput = 0;
+                for (const conn of this.connections) {
+                    synapticInput += conn.weight * conn.source.state;
+                }
+
+                const activation = Math.tanh(synapticInput + this.inputWeight * input);
+                const dxdt = -this.state / this.tau + activation;
+                this.state += dxdt * dt;
+                this.state = Math.max(-1, Math.min(1, this.state));
+
+                // Hebbian-like learning
+                for (const conn of this.connections) {
+                    const delta = learningRate * this.state * conn.source.state;
+                    conn.weight += delta * 0.1;
+                    conn.weight = Math.max(-2, Math.min(2, conn.weight));
+                }
+            }
+        }
+
+        class LiquidNetwork {
+            constructor(numNeurons = 64) {
+                this.neurons = [];
+                this.learningRate = 0.01;
+                this.tau = 1.0;
+                this.density = 0.5;
+                this.time = 0;
+                this.memories = [];
+
+                this.initNetwork(numNeurons);
+            }
+
+            initNetwork(numNeurons) {
+                this.neurons = [];
+                const canvas = document.getElementById('network-canvas');
+                const width = canvas.width;
+                const height = canvas.height;
+
+                // Create neurons in a grid-like pattern
+                const cols = Math.ceil(Math.sqrt(numNeurons * 1.5));
+                const rows = Math.ceil(numNeurons / cols);
+
+                for (let i = 0; i < numNeurons; i++) {
+                    const col = i % cols;
+                    const row = Math.floor(i / cols);
+                    const x = 50 + (col / cols) * (width - 100) + (Math.random() - 0.5) * 30;
+                    const y = 50 + (row / rows) * (height - 100) + (Math.random() - 0.5) * 30;
+
+                    this.neurons.push(new LiquidNeuron(i, x, y));
+                }
+
+                // Create connections
+                this.createConnections();
+
+                document.getElementById('neuron-count').textContent = this.neurons.length;
+            }
+
+            createConnections() {
+                let synapseCount = 0;
+                for (const neuron of this.neurons) {
+                    neuron.connections = [];
+                    for (const other of this.neurons) {
+                        if (neuron !== other && Math.random() < this.density) {
+                            neuron.connections.push({
+                                source: other,
+                                weight: Math.random() * 2 - 1
+                            });
+                            synapseCount++;
+                        }
+                    }
+                }
+                document.getElementById('synapse-count').textContent = synapseCount;
+            }
+
+            update(input, dt = 0.1) {
+                for (const neuron of this.neurons) {
+                    neuron.tau = this.tau;
+                    neuron.update(input, dt, this.learningRate);
+                }
+                this.time += dt;
+            }
+
+            getAverageState() {
+                return this.neurons.reduce((sum, n) => sum + Math.abs(n.state), 0) / this.neurons.length;
+            }
+
+            addMemory(text, importance = 1.0) {
+                this.memories.push({
+                    text,
+                    importance,
+                    timestamp: this.time,
+                    embedding: this.neurons.slice(0, 8).map(n => n.state)
+                });
+
+                // Keep only recent memories
+                if (this.memories.length > 20) {
+                    this.memories.shift();
+                }
+            }
+        }
+
+        // Global state
+        let network = new LiquidNetwork(64);
+        let isRunning = false;
+        let animationId = null;
+        let adaptationProgress = 0;
+        let memoryProgress = 0;
+        let consensusProgress = 0;
+
+        // Agent states
+        let agentStates = {
+            claude: new Float32Array(64),
+            gemini: new Float32Array(64),
+            gpt: new Float32Array(64)
+        };
+
+        // Initialize agent state grids
+        function initAgentStates() {
+            for (const agent of ['claude', 'gemini', 'gpt']) {
+                const container = document.getElementById(`${agent}-state`);
+                container.innerHTML = '';
+                for (let i = 0; i < 64; i++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'state-cell';
+                    cell.style.background = 'rgba(255,255,255,0.1)';
+                    container.appendChild(cell);
+                    agentStates[agent][i] = Math.random() * 0.3;
+                }
+            }
+        }
+
+        // Update agent state visualization
+        function updateAgentStates() {
+            const colors = {
+                claude: [249, 115, 22],  // orange
+                gemini: [59, 130, 246],   // blue
+                gpt: [16, 185, 129]       // green
+            };
+
+            for (const agent of ['claude', 'gemini', 'gpt']) {
+                const container = document.getElementById(`${agent}-state`);
+                const cells = container.children;
+                let sum = 0;
+
+                for (let i = 0; i < 64; i++) {
+                    // Update state with some dynamics
+                    agentStates[agent][i] += (Math.random() - 0.5) * 0.1;
+                    agentStates[agent][i] = Math.max(0, Math.min(1, agentStates[agent][i]));
+
+                    const val = agentStates[agent][i];
+                    sum += val;
+                    const [r, g, b] = colors[agent];
+                    cells[i].style.background = `rgba(${r}, ${g}, ${b}, ${val})`;
+                }
+
+                document.getElementById(`${agent}-state-val`).textContent = (sum / 64).toFixed(2);
+            }
+        }
+
+        // Draw network visualization
+        function drawNetwork() {
+            const canvas = document.getElementById('network-canvas');
+            const ctx = canvas.getContext('2d');
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw connections
+            ctx.lineWidth = 0.5;
+            for (const neuron of network.neurons) {
+                for (const conn of neuron.connections) {
+                    const strength = Math.abs(conn.weight);
+                    const isPositive = conn.weight > 0;
+
+                    ctx.beginPath();
+                    ctx.moveTo(conn.source.x, conn.source.y);
+                    ctx.lineTo(neuron.x, neuron.y);
+
+                    if (isPositive) {
+                        ctx.strokeStyle = `rgba(16, 185, 129, ${strength * 0.3})`;
+                    } else {
+                        ctx.strokeStyle = `rgba(239, 68, 68, ${strength * 0.3})`;
+                    }
+                    ctx.stroke();
+                }
+            }
+
+            // Draw neurons
+            for (const neuron of network.neurons) {
+                const intensity = (neuron.state + 1) / 2;
+                const size = 4 + intensity * 4;
+
+                ctx.beginPath();
+                ctx.arc(neuron.x, neuron.y, size, 0, Math.PI * 2);
+
+                // Color based on state
+                const r = Math.floor(139 + intensity * (245 - 139));
+                const g = Math.floor(92 + intensity * (158 - 92));
+                const b = Math.floor(246 + intensity * (11 - 246));
+
+                ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                ctx.fill();
+
+                // Glow effect for active neurons
+                if (Math.abs(neuron.state) > 0.5) {
+                    ctx.shadowColor = `rgb(${r}, ${g}, ${b})`;
+                    ctx.shadowBlur = 10;
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+                }
+            }
+
+            document.getElementById('time-step').textContent = network.time.toFixed(1);
+        }
+
+        // Draw consensus visualization
+        function drawConsensus() {
+            const canvas = document.getElementById('consensus-canvas');
+            const ctx = canvas.getContext('2d');
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw consensus wave
+            ctx.beginPath();
+            ctx.moveTo(0, canvas.height / 2);
+
+            for (let x = 0; x < canvas.width; x++) {
+                const t = (x / canvas.width) * Math.PI * 4 + network.time;
+                const y = canvas.height / 2 +
+                         Math.sin(t) * 30 * agentStates.claude[x % 64] +
+                         Math.sin(t * 1.5) * 20 * agentStates.gemini[x % 64] +
+                         Math.sin(t * 0.7) * 25 * agentStates.gpt[x % 64];
+                ctx.lineTo(x, y);
+            }
+
+            ctx.strokeStyle = 'rgba(139, 92, 246, 0.8)';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Fill area
+            ctx.lineTo(canvas.width, canvas.height);
+            ctx.lineTo(0, canvas.height);
+            ctx.closePath();
+
+            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            gradient.addColorStop(0, 'rgba(139, 92, 246, 0.3)');
+            gradient.addColorStop(1, 'rgba(139, 92, 246, 0)');
+            ctx.fillStyle = gradient;
+            ctx.fill();
+        }
+
+        // Update memory display
+        function updateMemoryDisplay() {
+            const container = document.getElementById('memory-container');
+            container.innerHTML = '';
+
+            for (let i = network.memories.length - 1; i >= 0; i--) {
+                const mem = network.memories[i];
+                const div = document.createElement('div');
+                div.className = 'memory-cell' + (i === network.memories.length - 1 ? ' active' : '');
+                div.innerHTML = `
+                    <div style="color: #9ca3af; margin-bottom: 0.25rem;">t=${mem.timestamp.toFixed(1)}s</div>
+                    <div>${mem.text}</div>
+                `;
+                container.appendChild(div);
+            }
+        }
+
+        // Animation loop
+        function animate() {
+            if (!isRunning) return;
+
+            // Generate input signal (could be from user or automatic)
+            const input = Math.sin(network.time * 0.5) * 0.5;
+
+            // Update network
+            network.update(input, 0.05);
+
+            // Update visualizations
+            drawNetwork();
+            updateAgentStates();
+            drawConsensus();
+
+            // Update progress bars
+            adaptationProgress = Math.min(100, adaptationProgress + 0.3);
+            memoryProgress = Math.min(100, memoryProgress + 0.2);
+            consensusProgress = Math.min(100, consensusProgress + 0.25);
+
+            document.getElementById('adapt-bar').style.width = adaptationProgress + '%';
+            document.getElementById('adapt-val').textContent = adaptationProgress.toFixed(0) + '%';
+            document.getElementById('memory-bar').style.width = memoryProgress + '%';
+            document.getElementById('memory-val').textContent = memoryProgress.toFixed(0) + '%';
+            document.getElementById('consensus-bar').style.width = consensusProgress + '%';
+            document.getElementById('consensus-val').textContent = consensusProgress.toFixed(0) + '%';
+
+            animationId = requestAnimationFrame(animate);
+        }
+
+        // Start/Stop learning
+        function startLearning() {
+            isRunning = !isRunning;
+            const btn = document.getElementById('btn-start');
+
+            if (isRunning) {
+                btn.textContent = 'Stop Learning';
+                btn.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
+                animate();
+            } else {
+                btn.textContent = 'Start Learning';
+                btn.style.background = 'linear-gradient(135deg, #8b5cf6, #7c3aed)';
+                if (animationId) {
+                    cancelAnimationFrame(animationId);
+                }
+            }
+        }
+
+        // Reset system
+        function resetSystem() {
+            isRunning = false;
+            const btn = document.getElementById('btn-start');
+            btn.textContent = 'Start Learning';
+            btn.style.background = 'linear-gradient(135deg, #8b5cf6, #7c3aed)';
+
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+            }
+
+            network = new LiquidNetwork(64);
+            adaptationProgress = 0;
+            memoryProgress = 0;
+            consensusProgress = 0;
+
+            document.getElementById('adapt-bar').style.width = '0%';
+            document.getElementById('adapt-val').textContent = '0%';
+            document.getElementById('memory-bar').style.width = '0%';
+            document.getElementById('memory-val').textContent = '0%';
+            document.getElementById('consensus-bar').style.width = '0%';
+            document.getElementById('consensus-val').textContent = '0%';
+
+            initAgentStates();
+            drawNetwork();
+            updateMemoryDisplay();
+        }
+
+        // Tab switching
+        function showTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('tab-' + tab).classList.add('active');
+
+            document.getElementById('panel-network').style.display = tab === 'network' ? 'block' : 'none';
+            document.getElementById('panel-memory').style.display = tab === 'memory' ? 'block' : 'none';
+            document.getElementById('panel-agents').style.display = tab === 'agents' ? 'block' : 'none';
+        }
+
+        // Parameter updates
+        function updateLR(val) {
+            network.learningRate = parseFloat(val);
+            document.getElementById('lr-val').textContent = val;
+        }
+
+        function updateTau(val) {
+            network.tau = parseFloat(val);
+            document.getElementById('tau-val').textContent = val;
+        }
+
+        function updateDensity(val) {
+            network.density = parseFloat(val);
+            document.getElementById('density-val').textContent = val;
+            network.createConnections();
+        }
+
+        // Feed input to network
+        function feedInput() {
+            const text = document.getElementById('input-text').value.trim();
+            if (!text) return;
+
+            // Convert text to input signal
+            const signal = text.split('').reduce((sum, c) => sum + c.charCodeAt(0), 0) / text.length / 128 - 0.5;
+
+            // Run several update steps with this input
+            for (let i = 0; i < 10; i++) {
+                network.update(signal, 0.1);
+            }
+
+            // Store in memory
+            network.addMemory(text);
+            updateMemoryDisplay();
+
+            // Update visualizations
+            drawNetwork();
+
+            // Clear input
+            document.getElementById('input-text').value = '';
+
+            // Boost progress
+            adaptationProgress = Math.min(100, adaptationProgress + 10);
+            memoryProgress = Math.min(100, memoryProgress + 15);
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', () => {
+            initAgentStates();
+            drawNetwork();
+            updateMemoryDisplay();
+            drawConsensus();
+        });
+    </script>
+</body>
+</html>

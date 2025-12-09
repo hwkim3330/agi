@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Agents - AGI Trinity</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xz/fonts@1/serve/plus-jakarta-sans.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header glass">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">T</div>
+                <span class="logo-text gradient-text">AGI Trinity</span>
+            </a>
+
+            <nav class="nav">
+                <a href="index.html">Home</a>
+                <a href="agents.html" class="active">Agents</a>
+                <a href="strategies.html">Strategies</a>
+                <a href="demo.html">Demo</a>
+                <a href="docs.html">Docs</a>
+            </nav>
+
+            <a href="https://github.com/hwkim3330/agi" target="_blank" class="btn btn-primary">
+                GitHub
+            </a>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero" style="padding-bottom: 2rem;">
+        <div class="container">
+            <h1>
+                <span class="gradient-text">AI Agents</span>
+            </h1>
+            <p>
+                세 가지 최신 AI 모델의 고유한 강점을 활용하여<br>
+                더 정확하고 균형 잡힌 결과를 도출합니다
+            </p>
+        </div>
+    </section>
+
+    <!-- Agent Comparison -->
+    <section class="section" style="padding-top: 2rem;">
+        <div class="container">
+            <h2 class="section-title">에이전트 비교</h2>
+
+            <div class="table-wrapper glass">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Agent</th>
+                            <th>Model</th>
+                            <th>Role</th>
+                            <th>Strengths</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="gradient-claude" style="font-weight: 600;">Claude</span></td>
+                            <td>Opus 4.5</td>
+                            <td>기술 전문가</td>
+                            <td>코드 분석, 디버깅, 시스템 설계, 보안</td>
+                        </tr>
+                        <tr>
+                            <td><span class="gradient-gemini" style="font-weight: 600;">Gemini</span></td>
+                            <td>3 Pro</td>
+                            <td>데이터 분석가</td>
+                            <td>리서치, 팩트체킹, 멀티모달, Deep Think</td>
+                        </tr>
+                        <tr>
+                            <td><span class="gradient-gpt" style="font-weight: 600;">GPT</span></td>
+                            <td>5.1</td>
+                            <td>창의적 문제해결사</td>
+                            <td>창의적 솔루션, 브레인스토밍, 전략, 통합 추론</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Claude Section -->
+    <section class="section" id="claude" style="background: rgba(0,0,0,0.2);">
+        <div class="container" style="max-width: 900px;">
+            <div class="card glass-strong" style="padding: 2rem;">
+                <div style="display: flex; align-items: center; gap: 1.5rem; margin-bottom: 2rem;">
+                    <div class="agent-icon claude" style="width: 80px; height: 80px; font-size: 2rem; margin-bottom: 0;">C</div>
+                    <div>
+                        <h2 style="font-size: 2rem; font-weight: 700;">Claude <span style="color: #6b7280; font-weight: 400;">Opus 4.5</span></h2>
+                        <p class="gradient-claude" style="font-size: 1.125rem;">기술 전문가 | Technical Expert</p>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                    <div>
+                        <h3 style="font-weight: 600; margin-bottom: 1rem; color: #f97316;">주요 강점</h3>
+                        <ul class="feature-list">
+                            <li>정밀한 코드 분석 및 리뷰</li>
+                            <li>복잡한 버그 디버깅</li>
+                            <li>시스템 아키텍처 설계</li>
+                            <li>보안 취약점 탐지</li>
+                            <li>성능 최적화 제안</li>
+                            <li>200K 토큰 컨텍스트</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 style="font-weight: 600; margin-bottom: 1rem; color: #f97316;">최적 사용 사례</h3>
+                        <ul style="list-style: none; color: #d1d5db;">
+                            <li style="margin-bottom: 0.5rem;">💻 "이 코드의 버그를 찾아줘"</li>
+                            <li style="margin-bottom: 0.5rem;">🏗️ "마이크로서비스 아키텍처 설계"</li>
+                            <li style="margin-bottom: 0.5rem;">🔒 "보안 취약점 분석"</li>
+                            <li style="margin-bottom: 0.5rem;">📝 "코드 리뷰 및 리팩토링"</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1);">
+                    <h3 style="font-weight: 600; margin-bottom: 1rem;">API 예시</h3>
+                    <div class="code-block">
+<code><span class="keyword">from</span> trinity <span class="keyword">import</span> Trinity
+
+tri = Trinity()
+response = tri.ask(
+    <span class="string">"이 Python 코드의 보안 취약점을 분석해줘"</span>,
+    agents=[<span class="string">"claude"</span>]  <span class="comment"># Claude만 사용</span>
+)
+</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gemini Section -->
+    <section class="section" id="gemini">
+        <div class="container" style="max-width: 900px;">
+            <div class="card glass-strong" style="padding: 2rem;">
+                <div style="display: flex; align-items: center; gap: 1.5rem; margin-bottom: 2rem;">
+                    <div class="agent-icon gemini" style="width: 80px; height: 80px; font-size: 2rem; margin-bottom: 0;">G</div>
+                    <div>
+                        <h2 style="font-size: 2rem; font-weight: 700;">Gemini <span style="color: #6b7280; font-weight: 400;">3 Pro</span></h2>
+                        <p class="gradient-gemini" style="font-size: 1.125rem;">데이터 분석가 | Data Analyst</p>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                    <div>
+                        <h3 style="font-weight: 600; margin-bottom: 1rem; color: #3b82f6;">주요 강점</h3>
+                        <ul class="feature-list">
+                            <li>종합적인 리서치 능력</li>
+                            <li>팩트체킹 및 검증</li>
+                            <li>이미지/비디오 멀티모달 분석</li>
+                            <li>Deep Think 추론 모드</li>
+                            <li>시장 트렌드 분석</li>
+                            <li>데이터 시각화 제안</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 style="font-weight: 600; margin-bottom: 1rem; color: #3b82f6;">최적 사용 사례</h3>
+                        <ul style="list-style: none; color: #d1d5db;">
+                            <li style="margin-bottom: 0.5rem;">📊 "시장 데이터 분석해줘"</li>
+                            <li style="margin-bottom: 0.5rem;">🔍 "이 정보가 맞는지 검증해줘"</li>
+                            <li style="margin-bottom: 0.5rem;">🖼️ "이 이미지를 분석해줘"</li>
+                            <li style="margin-bottom: 0.5rem;">📈 "트렌드 리서치"</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1);">
+                    <h3 style="font-weight: 600; margin-bottom: 1rem;">API 예시</h3>
+                    <div class="code-block">
+<code><span class="keyword">from</span> trinity <span class="keyword">import</span> Trinity
+
+tri = Trinity()
+response = tri.ask(
+    <span class="string">"2024년 AI 시장 트렌드를 분석해줘"</span>,
+    agents=[<span class="string">"gemini"</span>]  <span class="comment"># Gemini만 사용</span>
+)
+</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GPT Section -->
+    <section class="section" id="gpt" style="background: rgba(0,0,0,0.2);">
+        <div class="container" style="max-width: 900px;">
+            <div class="card glass-strong" style="padding: 2rem;">
+                <div style="display: flex; align-items: center; gap: 1.5rem; margin-bottom: 2rem;">
+                    <div class="agent-icon gpt" style="width: 80px; height: 80px; font-size: 2rem; margin-bottom: 0;">G</div>
+                    <div>
+                        <h2 style="font-size: 2rem; font-weight: 700;">GPT <span style="color: #6b7280; font-weight: 400;">5.1</span></h2>
+                        <p class="gradient-gpt" style="font-size: 1.125rem;">창의적 문제해결사 | Creative Solver</p>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                    <div>
+                        <h3 style="font-weight: 600; margin-bottom: 1rem; color: #10b981;">주요 강점</h3>
+                        <ul class="feature-list">
+                            <li>창의적 문제 해결</li>
+                            <li>브레인스토밍 및 아이디어 생성</li>
+                            <li>전략 수립</li>
+                            <li>통합 추론 능력</li>
+                            <li>내러티브 생성</li>
+                            <li>혁신적 사고</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 style="font-weight: 600; margin-bottom: 1rem; color: #10b981;">최적 사용 사례</h3>
+                        <ul style="list-style: none; color: #d1d5db;">
+                            <li style="margin-bottom: 0.5rem;">💡 "새로운 기능 아이디어"</li>
+                            <li style="margin-bottom: 0.5rem;">📋 "마케팅 전략 수립"</li>
+                            <li style="margin-bottom: 0.5rem;">✍️ "스토리 및 컨텐츠 작성"</li>
+                            <li style="margin-bottom: 0.5rem;">🎯 "비즈니스 전략 제안"</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1);">
+                    <h3 style="font-weight: 600; margin-bottom: 1rem;">API 예시</h3>
+                    <div class="code-block">
+<code><span class="keyword">from</span> trinity <span class="keyword">import</span> Trinity
+
+tri = Trinity()
+response = tri.ask(
+    <span class="string">"새로운 SaaS 제품 아이디어를 브레인스토밍해줘"</span>,
+    agents=[<span class="string">"gpt"</span>]  <span class="comment"># GPT만 사용</span>
+)
+</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Smart Routing Section -->
+    <section class="section">
+        <div class="container" style="max-width: 800px;">
+            <h2 class="section-title gradient-text">Specialist 모드 자동 라우팅</h2>
+            <p style="text-align: center; color: #9ca3af; margin-bottom: 2rem;">
+                Specialist 전략을 사용하면 질문 유형에 따라 자동으로 최적의 에이전트가 선택됩니다
+            </p>
+
+            <div class="glass" style="padding: 2rem; border-radius: 1rem;">
+<pre style="font-family: 'Fira Code', monospace; font-size: 0.875rem; color: #d1d5db; line-height: 1.8;">
+<span style="color: #f97316;">코딩/디버깅 질문</span>     ──────────▶  <span style="color: #f97316;">Claude</span> (기술 전문가)
+
+<span style="color: #3b82f6;">연구/데이터 분석</span>     ──────────▶  <span style="color: #3b82f6;">Gemini</span> (데이터 분석가)
+
+<span style="color: #10b981;">창의적/전략적 질문</span>   ──────────▶  <span style="color: #10b981;">GPT</span> (창의적 문제해결사)
+
+<span style="color: #8b5cf6;">복합적 질문</span>          ──────────▶  <span style="color: #8b5cf6;">3개 AI 동시 실행 + 합의</span>
+</pre>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <a href="strategies.html#specialist" class="btn btn-secondary">Specialist 전략 자세히 보기 →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>
+            <span class="gradient-text" style="font-weight: 600;">AGI Trinity</span> - Multi-Agent AI Orchestrator<br>
+            <span style="font-size: 0.875rem;">Built with Claude Opus 4.5, Gemini 3 Pro, GPT-5.1</span>
+        </p>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

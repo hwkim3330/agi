@@ -6,681 +6,282 @@
     <title>AGI Trinity - Multi-Agent AI Orchestrator</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xz/fonts@1/serve/plus-jakarta-sans.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
-    <style>
-        :root {
-            --primary: #6366f1;
-            --secondary: #8b5cf6;
-            --accent: #06b6d4;
-            --dark: #0f172a;
-            --darker: #020617;
-        }
-
-        * {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-
-        body {
-            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 50%, #1e1b4b 100%);
-            min-height: 100vh;
-        }
-
-        .glass {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .glow {
-            box-shadow: 0 0 30px rgba(99, 102, 241, 0.3);
-        }
-
-        .agent-card {
-            transition: all 0.3s ease;
-        }
-
-        .agent-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.2);
-        }
-
-        .typing-indicator span {
-            animation: bounce 1.4s infinite ease-in-out both;
-        }
-
-        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
-        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
-
-        @keyframes bounce {
-            0%, 80%, 100% { transform: scale(0); }
-            40% { transform: scale(1); }
-        }
-
-        .gradient-text {
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .pulse-ring {
-            animation: pulse-ring 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
-        }
-
-        @keyframes pulse-ring {
-            0% { transform: scale(0.8); opacity: 1; }
-            50% { transform: scale(1.2); opacity: 0.5; }
-            100% { transform: scale(0.8); opacity: 1; }
-        }
-
-        #peer-status.connected { color: #10b981; }
-        #peer-status.disconnected { color: #ef4444; }
-    </style>
+    <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="text-white">
+<body>
     <!-- Header -->
-    <header class="glass fixed top-0 left-0 right-0 z-50">
-        <div class="container mx-auto px-6 py-4 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-500 to-cyan-400 flex items-center justify-center pulse-ring">
-                    <span class="text-xl">🤖</span>
-                </div>
-                <span class="text-xl font-bold gradient-text">AGI Trinity</span>
-            </div>
+    <header class="header glass">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">T</div>
+                <span class="logo-text gradient-text">AGI Trinity</span>
+            </a>
 
-            <nav class="hidden md:flex space-x-8">
-                <a href="#demo" class="hover:text-cyan-400 transition">Demo</a>
-                <a href="#agents" class="hover:text-cyan-400 transition">Agents</a>
-                <a href="#p2p" class="hover:text-cyan-400 transition">P2P Network</a>
-                <a href="#metrics" class="hover:text-cyan-400 transition">Metrics</a>
+            <nav class="nav">
+                <a href="index.html" class="active">Home</a>
+                <a href="liquid.html" style="color: #06b6d4;">Liquid AI</a>
+                <a href="agents.html">Agents</a>
+                <a href="strategies.html">Strategies</a>
+                <a href="demo.html">Demo</a>
+                <a href="docs.html">Docs</a>
             </nav>
 
-            <div class="flex items-center space-x-4">
-                <span id="peer-status" class="text-sm disconnected">● Offline</span>
-                <a href="https://github.com/hwkim3330/agi" target="_blank"
-                   class="px-4 py-2 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-90 transition">
-                    GitHub
-                </a>
-            </div>
+            <a href="https://github.com/hwkim3330/agi" target="_blank" class="btn btn-primary">
+                GitHub
+            </a>
         </div>
     </header>
 
     <!-- Hero Section -->
-    <section class="pt-32 pb-20 px-6">
-        <div class="container mx-auto text-center">
-            <h1 class="text-5xl md:text-7xl font-bold mb-6">
+    <section class="hero">
+        <div class="container">
+            <h1>
                 <span class="gradient-text">Three Minds</span><br>
-                <span class="text-gray-300">One Consciousness</span>
+                <span style="color: #d1d5db;">One Consciousness</span>
             </h1>
-            <p class="text-xl text-gray-400 max-w-2xl mx-auto mb-10">
-                Claude, Gemini, GPT-4를 통합한 집단 지능 시스템.<br>
-                PeerJS를 통한 분산 P2P 네트워크로 연결됩니다.
+            <p>
+                Claude Opus 4.5, Gemini 3 Pro, GPT-5.1을 통합한<br>
+                차세대 집단 지능 멀티에이전트 시스템
             </p>
-            <div class="flex justify-center space-x-4">
-                <button onclick="scrollToDemo()" class="px-8 py-3 rounded-full bg-gradient-to-r from-indigo-600 to-cyan-500 text-lg font-semibold hover:opacity-90 transition">
-                    Try Demo
-                </button>
-                <button onclick="initP2P()" class="px-8 py-3 rounded-full glass hover:bg-white/10 transition">
-                    Connect P2P
-                </button>
+            <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+                <a href="liquid.html" class="btn btn-primary" style="background: linear-gradient(135deg, #06b6d4, #8b5cf6);">Liquid AI</a>
+                <a href="demo.html" class="btn btn-primary">Try Demo</a>
+                <a href="docs.html" class="btn btn-secondary">Documentation</a>
+            </div>
+
+            <!-- Architecture Preview -->
+            <div class="architecture glass" style="margin-top: 4rem; max-width: 700px; margin-left: auto; margin-right: auto;">
+<pre style="white-space: pre; text-align: left;">
+            ┌─────────────────────┐
+            │    USER REQUEST     │
+            └──────────┬──────────┘
+                       │
+            ┌──────────▼──────────┐
+            │    SMART ROUTER     │
+            │  질문 분류 & 라우팅   │
+            └──────────┬──────────┘
+                       │
+      ┌────────────────┼────────────────┐
+      │                │                │
+      ▼                ▼                ▼
+┌───────────┐    ┌───────────┐    ┌───────────┐
+│  <span style="color: #f97316">CLAUDE</span>   │    │  <span style="color: #3b82f6">GEMINI</span>   │    │    <span style="color: #10b981">GPT</span>    │
+│ Opus 4.5  │    │  3 Pro    │    │    5.1    │
+└─────┬─────┘    └─────┬─────┘    └─────┬─────┘
+      │                │                │
+      └────────────────┼────────────────┘
+                       │
+            ┌──────────▼──────────┐
+            │  CONSENSUS ENGINE   │
+            │  (Rust Optimized)   │
+            └──────────┬──────────┘
+                       │
+            ┌──────────▼──────────┐
+            │   FINAL RESPONSE    │
+            └─────────────────────┘
+</pre>
             </div>
         </div>
     </section>
 
-    <!-- Agents Section -->
-    <section id="agents" class="py-20 px-6">
-        <div class="container mx-auto">
-            <h2 class="text-3xl font-bold text-center mb-12 gradient-text">AI Agents</h2>
-            <div class="grid md:grid-cols-3 gap-8">
-                <!-- Claude -->
-                <div class="agent-card glass rounded-2xl p-6">
-                    <div class="w-16 h-16 rounded-full bg-gradient-to-r from-orange-500 to-red-500 flex items-center justify-center mb-4">
-                        <span class="text-2xl">🧠</span>
-                    </div>
-                    <h3 class="text-xl font-bold mb-2">Claude</h3>
-                    <p class="text-gray-400 text-sm mb-4">Technical Expert</p>
-                    <ul class="text-sm text-gray-300 space-y-2">
-                        <li>✓ 코드 분석 및 디버깅</li>
-                        <li>✓ 시스템 아키텍처 설계</li>
-                        <li>✓ 보안 취약점 탐지</li>
-                        <li>✓ 성능 최적화 제안</li>
+    <!-- Why Trinity Section -->
+    <section class="section" style="background: rgba(0,0,0,0.2);">
+        <div class="container">
+            <h2 class="section-title gradient-text">왜 Trinity인가?</h2>
+
+            <div class="card-grid">
+                <div class="card glass">
+                    <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem;">단일 AI의 한계</h3>
+                    <ul style="color: #9ca3af; list-style: none;">
+                        <li style="margin-bottom: 0.5rem;">❌ 환각 (Hallucination)</li>
+                        <li style="margin-bottom: 0.5rem;">❌ 편향된 관점</li>
+                        <li style="margin-bottom: 0.5rem;">❌ 특정 분야 약점</li>
+                        <li>❌ 불확실한 답변</li>
                     </ul>
-                    <div class="mt-4 pt-4 border-t border-white/10">
-                        <div class="flex justify-between text-xs text-gray-500">
-                            <span>응답 시간</span>
-                            <span id="claude-latency">-</span>
-                        </div>
-                        <div class="w-full bg-gray-700 rounded-full h-1.5 mt-2">
-                            <div id="claude-bar" class="bg-orange-500 h-1.5 rounded-full" style="width: 0%"></div>
-                        </div>
-                    </div>
+                </div>
+
+                <div class="card glass">
+                    <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem;">Trinity의 해결책</h3>
+                    <ul class="feature-list">
+                        <li>교차 검증으로 신뢰도 향상</li>
+                        <li>다각도 분석으로 균형 있는 결과</li>
+                        <li>각 AI의 강점 조합</li>
+                        <li>합의 기반 신뢰도 점수</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Agents Preview Section -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title gradient-text">AI Agents</h2>
+
+            <div class="card-grid">
+                <!-- Claude -->
+                <div class="card glass">
+                    <div class="agent-icon claude">C</div>
+                    <h3 style="font-size: 1.25rem; font-weight: 700;">Claude <span style="color: #6b7280; font-weight: 400;">Opus 4.5</span></h3>
+                    <p style="color: #f97316; font-size: 0.875rem; margin-bottom: 1rem;">기술 전문가</p>
+                    <ul class="feature-list" style="font-size: 0.875rem;">
+                        <li>코드 분석 및 디버깅</li>
+                        <li>시스템 아키텍처 설계</li>
+                        <li>보안 취약점 탐지</li>
+                        <li>200K 토큰 컨텍스트</li>
+                    </ul>
                 </div>
 
                 <!-- Gemini -->
-                <div class="agent-card glass rounded-2xl p-6">
-                    <div class="w-16 h-16 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center mb-4">
-                        <span class="text-2xl">📊</span>
-                    </div>
-                    <h3 class="text-xl font-bold mb-2">Gemini</h3>
-                    <p class="text-gray-400 text-sm mb-4">Data Analyst</p>
-                    <ul class="text-sm text-gray-300 space-y-2">
-                        <li>✓ 종합적인 리서치</li>
-                        <li>✓ 데이터 분석 및 시각화</li>
-                        <li>✓ 팩트 체킹</li>
-                        <li>✓ 시장 분석</li>
+                <div class="card glass">
+                    <div class="agent-icon gemini">G</div>
+                    <h3 style="font-size: 1.25rem; font-weight: 700;">Gemini <span style="color: #6b7280; font-weight: 400;">3 Pro</span></h3>
+                    <p style="color: #3b82f6; font-size: 0.875rem; margin-bottom: 1rem;">데이터 분석가</p>
+                    <ul class="feature-list" style="font-size: 0.875rem;">
+                        <li>종합적인 리서치</li>
+                        <li>팩트체킹 및 검증</li>
+                        <li>멀티모달 분석</li>
+                        <li>Deep Think 추론</li>
                     </ul>
-                    <div class="mt-4 pt-4 border-t border-white/10">
-                        <div class="flex justify-between text-xs text-gray-500">
-                            <span>응답 시간</span>
-                            <span id="gemini-latency">-</span>
-                        </div>
-                        <div class="w-full bg-gray-700 rounded-full h-1.5 mt-2">
-                            <div id="gemini-bar" class="bg-blue-500 h-1.5 rounded-full" style="width: 0%"></div>
-                        </div>
-                    </div>
                 </div>
 
-                <!-- GPT-4 -->
-                <div class="agent-card glass rounded-2xl p-6">
-                    <div class="w-16 h-16 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 flex items-center justify-center mb-4">
-                        <span class="text-2xl">💡</span>
-                    </div>
-                    <h3 class="text-xl font-bold mb-2">GPT-4</h3>
-                    <p class="text-gray-400 text-sm mb-4">Creative Solver</p>
-                    <ul class="text-sm text-gray-300 space-y-2">
-                        <li>✓ 창의적 문제 해결</li>
-                        <li>✓ 전략적 혁신</li>
-                        <li>✓ 브레인스토밍</li>
-                        <li>✓ 내러티브 생성</li>
+                <!-- GPT -->
+                <div class="card glass">
+                    <div class="agent-icon gpt">G</div>
+                    <h3 style="font-size: 1.25rem; font-weight: 700;">GPT <span style="color: #6b7280; font-weight: 400;">5.1</span></h3>
+                    <p style="color: #10b981; font-size: 0.875rem; margin-bottom: 1rem;">창의적 문제해결사</p>
+                    <ul class="feature-list" style="font-size: 0.875rem;">
+                        <li>창의적 솔루션</li>
+                        <li>브레인스토밍</li>
+                        <li>전략 수립</li>
+                        <li>통합 추론</li>
                     </ul>
-                    <div class="mt-4 pt-4 border-t border-white/10">
-                        <div class="flex justify-between text-xs text-gray-500">
-                            <span>응답 시간</span>
-                            <span id="gpt4-latency">-</span>
-                        </div>
-                        <div class="w-full bg-gray-700 rounded-full h-1.5 mt-2">
-                            <div id="gpt4-bar" class="bg-green-500 h-1.5 rounded-full" style="width: 0%"></div>
-                        </div>
-                    </div>
                 </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <a href="agents.html" class="btn btn-secondary">에이전트 상세보기 →</a>
             </div>
         </div>
     </section>
 
-    <!-- Demo Section -->
-    <section id="demo" class="py-20 px-6 bg-black/20">
-        <div class="container mx-auto max-w-4xl">
-            <h2 class="text-3xl font-bold text-center mb-12 gradient-text">Live Demo</h2>
+    <!-- Strategies Preview -->
+    <section class="section" style="background: rgba(0,0,0,0.2);">
+        <div class="container">
+            <h2 class="section-title gradient-text">합의 전략</h2>
 
-            <div class="glass rounded-2xl p-6">
-                <!-- Input -->
-                <div class="mb-6">
-                    <label class="block text-sm text-gray-400 mb-2">질문 입력</label>
-                    <div class="flex space-x-3">
-                        <input type="text" id="prompt-input"
-                               placeholder="예: 마이크로서비스 아키텍처의 장단점을 분석해주세요"
-                               class="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-indigo-500">
-                        <button onclick="runDemo()" id="run-btn"
-                                class="px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 font-semibold hover:opacity-90 transition">
-                            실행
-                        </button>
-                    </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
+                <div class="card glass" style="text-align: center;">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🗳️</div>
+                    <h3 style="font-weight: 600;">Vote</h3>
+                    <p style="color: #9ca3af; font-size: 0.875rem;">최고 점수 응답 선택</p>
                 </div>
+                <div class="card glass" style="text-align: center;">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🔄</div>
+                    <h3 style="font-weight: 600;">Synthesis</h3>
+                    <p style="color: #9ca3af; font-size: 0.875rem;">응답 통합</p>
+                </div>
+                <div class="card glass" style="text-align: center;">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">💬</div>
+                    <h3 style="font-weight: 600;">Debate</h3>
+                    <p style="color: #9ca3af; font-size: 0.875rem;">AI간 토론 후 결론</p>
+                </div>
+                <div class="card glass" style="text-align: center;">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🎯</div>
+                    <h3 style="font-weight: 600;">Specialist</h3>
+                    <p style="color: #9ca3af; font-size: 0.875rem;">전문가 자동 선택</p>
+                </div>
+            </div>
 
-                <!-- Strategy -->
-                <div class="mb-6">
-                    <label class="block text-sm text-gray-400 mb-2">합의 전략</label>
-                    <div class="flex space-x-4">
-                        <label class="flex items-center space-x-2 cursor-pointer">
-                            <input type="radio" name="strategy" value="vote" checked class="text-indigo-500">
-                            <span>Vote</span>
-                        </label>
-                        <label class="flex items-center space-x-2 cursor-pointer">
-                            <input type="radio" name="strategy" value="synthesis" class="text-indigo-500">
-                            <span>Synthesis</span>
-                        </label>
-                        <label class="flex items-center space-x-2 cursor-pointer">
-                            <input type="radio" name="strategy" value="semantic" class="text-indigo-500">
-                            <span>Semantic</span>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Output -->
-                <div id="output-area" class="hidden">
-                    <div class="border-t border-white/10 pt-6">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="font-semibold">Trinity 합의 결과</h3>
-                            <span id="confidence-badge" class="px-3 py-1 rounded-full bg-green-500/20 text-green-400 text-sm">
-                                신뢰도: -
-                            </span>
-                        </div>
-                        <div id="result-content" class="bg-black/30 rounded-xl p-4 text-gray-300 whitespace-pre-wrap">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Loading -->
-                <div id="loading" class="hidden text-center py-8">
-                    <div class="typing-indicator inline-flex space-x-1">
-                        <span class="w-2 h-2 bg-indigo-500 rounded-full"></span>
-                        <span class="w-2 h-2 bg-indigo-500 rounded-full"></span>
-                        <span class="w-2 h-2 bg-indigo-500 rounded-full"></span>
-                    </div>
-                    <p class="text-gray-400 mt-3">에이전트들이 분석 중...</p>
-                </div>
+            <div style="text-align: center; margin-top: 2rem;">
+                <a href="strategies.html" class="btn btn-secondary">전략 상세보기 →</a>
             </div>
         </div>
     </section>
 
-    <!-- P2P Section -->
-    <section id="p2p" class="py-20 px-6">
-        <div class="container mx-auto max-w-4xl">
-            <h2 class="text-3xl font-bold text-center mb-12 gradient-text">P2P Network</h2>
+    <!-- Performance Section -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title gradient-text">Rust 성능 최적화</h2>
+            <p style="text-align: center; color: #9ca3af; margin-bottom: 2rem;">
+                합의 알고리즘을 Rust로 구현하여 고성능 처리<br>
+                <span style="font-size: 0.875rem;">Native: CLI/서버 | WASM: 웹 브라우저</span>
+            </p>
 
-            <div class="glass rounded-2xl p-6">
-                <div class="grid md:grid-cols-2 gap-6">
-                    <!-- My Peer ID -->
-                    <div>
-                        <label class="block text-sm text-gray-400 mb-2">내 Peer ID</label>
-                        <div class="flex space-x-2">
-                            <input type="text" id="my-peer-id" readonly
-                                   class="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 font-mono text-sm">
-                            <button onclick="copyPeerId()" class="px-4 rounded-xl bg-white/10 hover:bg-white/20 transition">
-                                📋
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Connect to Peer -->
-                    <div>
-                        <label class="block text-sm text-gray-400 mb-2">피어 연결</label>
-                        <div class="flex space-x-2">
-                            <input type="text" id="remote-peer-id" placeholder="원격 Peer ID 입력"
-                                   class="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3">
-                            <button onclick="connectToPeer()" class="px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 transition">
-                                연결
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Connected Peers -->
-                <div class="mt-6">
-                    <h4 class="text-sm text-gray-400 mb-3">연결된 피어</h4>
-                    <div id="connected-peers" class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                        <div class="text-center text-gray-500 col-span-full py-4">
-                            연결된 피어가 없습니다
-                        </div>
-                    </div>
-                </div>
-
-                <!-- P2P Chat -->
-                <div class="mt-6 border-t border-white/10 pt-6">
-                    <h4 class="text-sm text-gray-400 mb-3">P2P 메시지</h4>
-                    <div id="p2p-messages" class="bg-black/30 rounded-xl p-4 h-32 overflow-y-auto mb-3 text-sm">
-                    </div>
-                    <div class="flex space-x-2">
-                        <input type="text" id="p2p-message" placeholder="메시지 입력..."
-                               class="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2">
-                        <button onclick="sendP2PMessage()" class="px-4 rounded-xl bg-cyan-600 hover:bg-cyan-700 transition">
-                            전송
-                        </button>
-                    </div>
-                </div>
+            <div class="table-wrapper glass" style="max-width: 600px; margin: 0 auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>작업</th>
+                            <th>Python</th>
+                            <th>Rust</th>
+                            <th>개선</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>텍스트 유사도</td>
+                            <td>450ms</td>
+                            <td style="color: #10b981;">12ms</td>
+                            <td><span class="badge badge-success">37x</span></td>
+                        </tr>
+                        <tr>
+                            <td>합의 계산</td>
+                            <td>280ms</td>
+                            <td style="color: #10b981;">8ms</td>
+                            <td><span class="badge badge-success">35x</span></td>
+                        </tr>
+                        <tr>
+                            <td>응답 파싱</td>
+                            <td>120ms</td>
+                            <td style="color: #10b981;">5ms</td>
+                            <td><span class="badge badge-success">24x</span></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </section>
 
-    <!-- Metrics Section -->
-    <section id="metrics" class="py-20 px-6 bg-black/20">
-        <div class="container mx-auto max-w-4xl">
-            <h2 class="text-3xl font-bold text-center mb-12 gradient-text">Performance Metrics</h2>
+    <!-- Quick Start Section -->
+    <section class="section" style="background: rgba(0,0,0,0.2);">
+        <div class="container" style="max-width: 700px;">
+            <h2 class="section-title gradient-text">Quick Start</h2>
 
-            <div class="grid md:grid-cols-2 gap-6">
-                <!-- Latency Chart -->
-                <div class="glass rounded-2xl p-6">
-                    <h3 class="font-semibold mb-4">응답 시간 (ms)</h3>
-                    <canvas id="latency-chart"></canvas>
-                </div>
+            <div class="code-block glass" style="position: relative;">
+                <button onclick="copyCode(this)" style="position: absolute; top: 0.5rem; right: 0.5rem; padding: 0.25rem 0.5rem; border-radius: 0.25rem; background: rgba(255,255,255,0.1); border: none; color: #9ca3af; cursor: pointer; font-size: 0.75rem;">Copy</button>
+<code><span class="comment"># 설치</span>
+git clone https://github.com/hwkim3330/agi.git
+cd agi
+pip install -r requirements.txt
 
-                <!-- Success Rate -->
-                <div class="glass rounded-2xl p-6">
-                    <h3 class="font-semibold mb-4">성공률</h3>
-                    <canvas id="success-chart"></canvas>
-                </div>
+<span class="comment"># API 키 설정</span>
+export ANTHROPIC_API_KEY="your-key"
+export GOOGLE_API_KEY="your-key"
+export OPENAI_API_KEY="your-key"
+
+<span class="comment"># 실행</span>
+python trinity.py ask "마이크로서비스 아키텍처의 장단점"
+</code>
             </div>
 
-            <!-- Stats -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-                <div class="glass rounded-xl p-4 text-center">
-                    <div class="text-2xl font-bold gradient-text" id="total-requests">0</div>
-                    <div class="text-xs text-gray-400">총 요청</div>
-                </div>
-                <div class="glass rounded-xl p-4 text-center">
-                    <div class="text-2xl font-bold text-green-400" id="success-rate">0%</div>
-                    <div class="text-xs text-gray-400">성공률</div>
-                </div>
-                <div class="glass rounded-xl p-4 text-center">
-                    <div class="text-2xl font-bold text-cyan-400" id="avg-latency">0ms</div>
-                    <div class="text-xs text-gray-400">평균 응답시간</div>
-                </div>
-                <div class="glass rounded-xl p-4 text-center">
-                    <div class="text-2xl font-bold text-purple-400" id="connected-count">0</div>
-                    <div class="text-xs text-gray-400">연결된 피어</div>
-                </div>
+            <div style="text-align: center; margin-top: 2rem;">
+                <a href="docs.html" class="btn btn-primary">전체 문서 보기</a>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="py-10 px-6 border-t border-white/10">
-        <div class="container mx-auto text-center">
-            <p class="text-gray-500">
-                AGI Trinity - Multi-Agent AI Orchestrator<br>
-                <span class="text-sm">Built with Claude, Gemini, GPT-4 & PeerJS</span>
-            </p>
-        </div>
+    <footer class="footer">
+        <p>
+            <span class="gradient-text" style="font-weight: 600;">AGI Trinity</span> - Multi-Agent AI Orchestrator<br>
+            <span style="font-size: 0.875rem;">Built with Claude Opus 4.5, Gemini 3 Pro, GPT-5.1</span>
+        </p>
+        <p style="margin-top: 1rem; font-size: 0.75rem;">
+            "The whole is greater than the sum of its parts"
+        </p>
     </footer>
 
-    <script>
-        // Global state
-        let peer = null;
-        let connections = [];
-        let metrics = {
-            totalRequests: 0,
-            successfulRequests: 0,
-            latencies: []
-        };
-
-        // Initialize charts
-        let latencyChart, successChart;
-
-        document.addEventListener('DOMContentLoaded', () => {
-            initCharts();
-        });
-
-        function initCharts() {
-            const latencyCtx = document.getElementById('latency-chart').getContext('2d');
-            latencyChart = new Chart(latencyCtx, {
-                type: 'line',
-                data: {
-                    labels: [],
-                    datasets: [
-                        { label: 'Claude', data: [], borderColor: '#f97316', tension: 0.4 },
-                        { label: 'Gemini', data: [], borderColor: '#3b82f6', tension: 0.4 },
-                        { label: 'GPT-4', data: [], borderColor: '#10b981', tension: 0.4 }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    plugins: { legend: { labels: { color: '#9ca3af' } } },
-                    scales: {
-                        x: { ticks: { color: '#9ca3af' }, grid: { color: '#374151' } },
-                        y: { ticks: { color: '#9ca3af' }, grid: { color: '#374151' } }
-                    }
-                }
-            });
-
-            const successCtx = document.getElementById('success-chart').getContext('2d');
-            successChart = new Chart(successCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['성공', '실패'],
-                    datasets: [{
-                        data: [100, 0],
-                        backgroundColor: ['#10b981', '#ef4444']
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: { legend: { labels: { color: '#9ca3af' } } }
-                }
-            });
-        }
-
-        // P2P Functions
-        function initP2P() {
-            peer = new Peer();
-
-            peer.on('open', (id) => {
-                document.getElementById('my-peer-id').value = id;
-                document.getElementById('peer-status').textContent = '● Online';
-                document.getElementById('peer-status').className = 'text-sm connected';
-                addP2PMessage('System', `Connected as ${id}`);
-            });
-
-            peer.on('connection', (conn) => {
-                handleConnection(conn);
-            });
-
-            peer.on('error', (err) => {
-                addP2PMessage('Error', err.message);
-            });
-        }
-
-        function connectToPeer() {
-            const remotePeerId = document.getElementById('remote-peer-id').value;
-            if (!remotePeerId || !peer) return;
-
-            const conn = peer.connect(remotePeerId);
-            handleConnection(conn);
-        }
-
-        function handleConnection(conn) {
-            conn.on('open', () => {
-                connections.push(conn);
-                updateConnectedPeers();
-                addP2PMessage('System', `Connected to ${conn.peer}`);
-            });
-
-            conn.on('data', (data) => {
-                if (data.type === 'message') {
-                    addP2PMessage(conn.peer.slice(0, 8), data.content);
-                } else if (data.type === 'query') {
-                    // Handle distributed query
-                    handleDistributedQuery(data, conn);
-                }
-            });
-
-            conn.on('close', () => {
-                connections = connections.filter(c => c !== conn);
-                updateConnectedPeers();
-            });
-        }
-
-        function sendP2PMessage() {
-            const message = document.getElementById('p2p-message').value;
-            if (!message) return;
-
-            connections.forEach(conn => {
-                conn.send({ type: 'message', content: message });
-            });
-
-            addP2PMessage('Me', message);
-            document.getElementById('p2p-message').value = '';
-        }
-
-        function addP2PMessage(sender, content) {
-            const container = document.getElementById('p2p-messages');
-            const msg = document.createElement('div');
-            msg.className = 'mb-1';
-            msg.innerHTML = `<span class="text-indigo-400">${sender}:</span> ${content}`;
-            container.appendChild(msg);
-            container.scrollTop = container.scrollHeight;
-        }
-
-        function updateConnectedPeers() {
-            const container = document.getElementById('connected-peers');
-            document.getElementById('connected-count').textContent = connections.length;
-
-            if (connections.length === 0) {
-                container.innerHTML = '<div class="text-center text-gray-500 col-span-full py-4">연결된 피어가 없습니다</div>';
-                return;
-            }
-
-            container.innerHTML = connections.map(conn => `
-                <div class="glass rounded-lg p-2 text-center">
-                    <div class="text-green-400 text-xs">●</div>
-                    <div class="font-mono text-xs truncate">${conn.peer.slice(0, 12)}...</div>
-                </div>
-            `).join('');
-        }
-
-        function copyPeerId() {
-            const peerId = document.getElementById('my-peer-id').value;
-            navigator.clipboard.writeText(peerId);
-        }
-
-        // Demo Functions
-        async function runDemo() {
-            const prompt = document.getElementById('prompt-input').value;
-            if (!prompt) return;
-
-            const strategy = document.querySelector('input[name="strategy"]:checked').value;
-
-            // Show loading
-            document.getElementById('loading').classList.remove('hidden');
-            document.getElementById('output-area').classList.add('hidden');
-            document.getElementById('run-btn').disabled = true;
-
-            // Simulate agent responses
-            const responses = await simulateAgentResponses(prompt);
-
-            // Calculate consensus
-            const consensus = calculateConsensus(responses, strategy);
-
-            // Update UI
-            displayResult(consensus);
-            updateMetrics(responses);
-
-            // Broadcast to P2P network
-            broadcastQuery(prompt, consensus);
-        }
-
-        async function simulateAgentResponses(prompt) {
-            // Simulated responses (in production, would call actual APIs)
-            const agents = ['claude', 'gemini', 'gpt4'];
-            const responses = [];
-
-            for (const agent of agents) {
-                await sleep(Math.random() * 1000 + 500);
-
-                const latency = Math.random() * 2 + 0.5;
-                updateAgentProgress(agent, latency);
-
-                responses.push({
-                    agent_name: agent,
-                    content: generateMockResponse(agent, prompt),
-                    success: Math.random() > 0.1,
-                    latency: latency,
-                    confidence: Math.random() * 0.3 + 0.7
-                });
-            }
-
-            return responses;
-        }
-
-        function generateMockResponse(agent, prompt) {
-            const responses = {
-                claude: `[Claude 분석]\n\n기술적 관점에서 "${prompt}"에 대해 분석하면:\n\n1. 아키텍처 고려사항\n2. 성능 최적화 방안\n3. 보안 검토 결과\n\n상세 분석이 완료되었습니다.`,
-                gemini: `[Gemini 리서치]\n\n"${prompt}"에 대한 데이터 분석:\n\n- 시장 동향 분석\n- 통계적 검증 결과\n- 팩트 체킹 완료\n\n종합적인 리서치가 완료되었습니다.`,
-                gpt4: `[GPT-4 창의적 제안]\n\n"${prompt}"에 대한 혁신적 접근:\n\n💡 아이디어 1: 새로운 관점\n💡 아이디어 2: 대안적 솔루션\n💡 아이디어 3: 미래 비전\n\n창의적 분석이 완료되었습니다.`
-            };
-            return responses[agent];
-        }
-
-        function calculateConsensus(responses, strategy) {
-            const successful = responses.filter(r => r.success);
-            const confidence = successful.length / responses.length;
-
-            let content;
-            if (strategy === 'synthesis') {
-                content = successful.map(r => r.content).join('\n\n---\n\n');
-            } else if (strategy === 'semantic') {
-                // Pick highest confidence
-                const best = successful.reduce((a, b) => a.confidence > b.confidence ? a : b);
-                content = `[Semantic 합의 - ${best.agent_name} 선택]\n\n${best.content}`;
-            } else {
-                // Vote - pick longest
-                const best = successful.reduce((a, b) => a.content.length > b.content.length ? a : b);
-                content = `[Vote 합의 - ${best.agent_name} 선택]\n\n${best.content}`;
-            }
-
-            return { content, confidence, strategy };
-        }
-
-        function displayResult(consensus) {
-            document.getElementById('loading').classList.add('hidden');
-            document.getElementById('output-area').classList.remove('hidden');
-            document.getElementById('run-btn').disabled = false;
-
-            document.getElementById('result-content').textContent = consensus.content;
-            document.getElementById('confidence-badge').textContent = `신뢰도: ${(consensus.confidence * 100).toFixed(0)}%`;
-        }
-
-        function updateAgentProgress(agent, latency) {
-            const latencyEl = document.getElementById(`${agent === 'gpt4' ? 'gpt4' : agent}-latency`);
-            const barEl = document.getElementById(`${agent === 'gpt4' ? 'gpt4' : agent}-bar`);
-
-            if (latencyEl) latencyEl.textContent = `${(latency * 1000).toFixed(0)}ms`;
-            if (barEl) barEl.style.width = `${Math.min(100, latency * 50)}%`;
-        }
-
-        function updateMetrics(responses) {
-            metrics.totalRequests++;
-            metrics.successfulRequests += responses.filter(r => r.success).length / responses.length;
-            metrics.latencies.push(responses.reduce((sum, r) => sum + r.latency, 0) / responses.length);
-
-            // Update stats
-            document.getElementById('total-requests').textContent = metrics.totalRequests;
-            document.getElementById('success-rate').textContent = `${((metrics.successfulRequests / metrics.totalRequests) * 100).toFixed(0)}%`;
-            document.getElementById('avg-latency').textContent = `${(metrics.latencies.reduce((a, b) => a + b, 0) / metrics.latencies.length * 1000).toFixed(0)}ms`;
-
-            // Update charts
-            const label = new Date().toLocaleTimeString();
-            latencyChart.data.labels.push(label);
-            responses.forEach((r, i) => {
-                latencyChart.data.datasets[i].data.push(r.latency * 1000);
-            });
-            if (latencyChart.data.labels.length > 10) {
-                latencyChart.data.labels.shift();
-                latencyChart.data.datasets.forEach(d => d.data.shift());
-            }
-            latencyChart.update();
-
-            successChart.data.datasets[0].data = [
-                metrics.successfulRequests,
-                metrics.totalRequests - metrics.successfulRequests
-            ];
-            successChart.update();
-        }
-
-        function broadcastQuery(prompt, consensus) {
-            if (connections.length === 0) return;
-
-            connections.forEach(conn => {
-                conn.send({
-                    type: 'query',
-                    prompt: prompt,
-                    result: consensus
-                });
-            });
-
-            addP2PMessage('Broadcast', `Query shared with ${connections.length} peers`);
-        }
-
-        function handleDistributedQuery(data, conn) {
-            addP2PMessage(conn.peer.slice(0, 8), `Received query: ${data.prompt.slice(0, 50)}...`);
-        }
-
-        function scrollToDemo() {
-            document.getElementById('demo').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function sleep(ms) {
-            return new Promise(resolve => setTimeout(resolve, ms));
-        }
-    </script>
+    <script src="js/main.js"></script>
 </body>
 </html>
