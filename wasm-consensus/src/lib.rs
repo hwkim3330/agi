@@ -418,30 +418,41 @@ fn jaccard_similarity(text1: &str, text2: &str, stopwords: &HashSet<String>) -> 
 
 /// 코사인 유사도 계산
 fn cosine_similarity(text1: &str, text2: &str, stopwords: &HashSet<String>) -> f64 {
-    let words1 = tokenize(text1, stopwords);
-    let words2 = tokenize(text2, stopwords);
+    let words1: Vec<String> = text1
+        .to_lowercase()
+        .split_whitespace()
+        .filter(|w| w.len() >= 3 && !stopwords.contains(*w))
+        .map(|s| s.to_string())
+        .collect();
+
+    let words2: Vec<String> = text2
+        .to_lowercase()
+        .split_whitespace()
+        .filter(|w| w.len() >= 3 && !stopwords.contains(*w))
+        .map(|s| s.to_string())
+        .collect();
 
     if words1.is_empty() || words2.is_empty() {
         return 0.0;
     }
 
     // TF 벡터 생성
-    let mut vocab: HashSet<&str> = HashSet::new();
+    let mut vocab: HashSet<String> = HashSet::new();
     for w in &words1 {
-        vocab.insert(w);
+        vocab.insert(w.clone());
     }
     for w in &words2 {
-        vocab.insert(w);
+        vocab.insert(w.clone());
     }
 
-    let vocab: Vec<&str> = vocab.into_iter().collect();
+    let vocab: Vec<String> = vocab.into_iter().collect();
 
     let tf1: Vec<f64> = vocab.iter().map(|w| {
-        words1.iter().filter(|x| x == w).count() as f64
+        words1.iter().filter(|x| *x == w).count() as f64
     }).collect();
 
     let tf2: Vec<f64> = vocab.iter().map(|w| {
-        words2.iter().filter(|x| x == w).count() as f64
+        words2.iter().filter(|x| *x == w).count() as f64
     }).collect();
 
     // 코사인 유사도
