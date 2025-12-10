@@ -19,11 +19,10 @@
 
             <nav class="nav">
                 <a href="index.html" class="active">Home</a>
-                <a href="liquid.html" style="color: #06b6d4;">Life Agent</a>
-                <a href="agents.html">Trinity</a>
-                <a href="strategies.html">Strategies</a>
+                <a href="life-agent.html" style="color: #06b6d4;">Life Agent</a>
+                <a href="trinity.html">Trinity</a>
                 <a href="demo.html">Demo</a>
-                <a href="ko/README.md">한국어</a>
+                <a href="ko/">한국어</a>
             </nav>
 
             <a href="https://github.com/hwkim3330/agi" target="_blank" class="btn btn-primary">
@@ -44,198 +43,213 @@
                 solves CAPTCHAs, and evolves through experience
             </p>
             <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
-                <a href="liquid.html" class="btn btn-primary" style="background: linear-gradient(135deg, #06b6d4, #8b5cf6);">Liquid AI</a>
-                <a href="demo.html" class="btn btn-primary">Try Demo</a>
-                <a href="docs.html" class="btn btn-secondary">Documentation</a>
+                <a href="life-agent.html" class="btn btn-primary" style="background: linear-gradient(135deg, #06b6d4, #8b5cf6);">Life Agent</a>
+                <a href="trinity.html" class="btn btn-primary">Trinity System</a>
+                <a href="https://github.com/hwkim3330/agi" class="btn btn-secondary">View Source</a>
             </div>
 
             <!-- Architecture Preview -->
             <div class="architecture glass" style="margin-top: 4rem; max-width: 700px; margin-left: auto; margin-right: auto;">
-<pre style="white-space: pre; text-align: left;">
-            ┌─────────────────────┐
-            │    USER REQUEST     │
-            └──────────┬──────────┘
-                       │
-            ┌──────────▼──────────┐
-            │    SMART ROUTER     │
-            │  질문 분류 & 라우팅   │
-            └──────────┬──────────┘
-                       │
-      ┌────────────────┼────────────────┐
-      │                │                │
-      ▼                ▼                ▼
-┌───────────┐    ┌───────────┐    ┌───────────┐
-│  <span style="color: #f97316">CLAUDE</span>   │    │  <span style="color: #3b82f6">GEMINI</span>   │    │    <span style="color: #10b981">GPT</span>    │
-│ Opus 4.5  │    │  3 Pro    │    │    5.1    │
-└─────┬─────┘    └─────┬─────┘    └─────┬─────┘
-      │                │                │
-      └────────────────┼────────────────┘
-                       │
-            ┌──────────▼──────────┐
-            │  CONSENSUS ENGINE   │
-            │  (Rust Optimized)   │
-            └──────────┬──────────┘
-                       │
-            ┌──────────▼──────────┐
-            │   FINAL RESPONSE    │
-            └─────────────────────┘
+<pre style="white-space: pre; text-align: left; font-size: 0.85rem;">
+┌─────────────────────────────────────────────────────────────┐
+│                    AGI Trinity System                        │
+├─────────────────────────────────────────────────────────────┤
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐       │
+│  │ <span style="color: #06b6d4;">Life Agent</span>   │  │   <span style="color: #8b5cf6;">Trinity</span>    │  │   <span style="color: #10b981;">Browser</span>    │       │
+│  │  (Vision)    │  │ (Consensus)  │  │    Agent     │       │
+│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘       │
+│         └─────────────────┼──────────────────┘               │
+│                           ▼                                  │
+│            ┌─────────────────────────────┐                  │
+│            │       <span style="color: #f97316;">LFM2-VL-1.6B</span>         │                  │
+│            │   (Local Vision-Language)   │                  │
+│            └─────────────┬───────────────┘                  │
+│        ┌─────────────────┼─────────────────┐                │
+│        ▼                 ▼                 ▼                │
+│  ┌──────────┐    ┌──────────────┐   ┌──────────────┐       │
+│  │Knowledge │    │  Continual   │   │    Claude    │       │
+│  │   Base   │    │   Learning   │   │  UltraThink  │       │
+│  └──────────┘    └──────────────┘   └──────────────┘       │
+└─────────────────────────────────────────────────────────────┘
 </pre>
             </div>
         </div>
     </section>
 
-    <!-- Why Trinity Section -->
+    <!-- Core Systems Section -->
     <section class="section" style="background: rgba(0,0,0,0.2);">
         <div class="container">
-            <h2 class="section-title gradient-text">왜 Trinity인가?</h2>
+            <h2 class="section-title gradient-text">Core Systems</h2>
 
             <div class="card-grid">
                 <div class="card glass">
-                    <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem;">단일 AI의 한계</h3>
-                    <ul style="color: #9ca3af; list-style: none;">
-                        <li style="margin-bottom: 0.5rem;">❌ 환각 (Hallucination)</li>
-                        <li style="margin-bottom: 0.5rem;">❌ 편향된 관점</li>
-                        <li style="margin-bottom: 0.5rem;">❌ 특정 분야 약점</li>
-                        <li>❌ 불확실한 답변</li>
-                    </ul>
-                </div>
-
-                <div class="card glass">
-                    <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem;">Trinity의 해결책</h3>
+                    <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: #06b6d4;">Life Agent (Vision-Based)</h3>
+                    <p style="color: #9ca3af; margin-bottom: 1rem;">Autonomous browser agent that learns from screenshots</p>
                     <ul class="feature-list">
-                        <li>교차 검증으로 신뢰도 향상</li>
-                        <li>다각도 분석으로 균형 있는 결과</li>
-                        <li>각 AI의 강점 조합</li>
-                        <li>합의 기반 신뢰도 점수</li>
+                        <li>Screenshot → Vision Model → Click Coordinates</li>
+                        <li>CAPTCHA solving (Turnstile, reCAPTCHA)</li>
+                        <li>Action pattern learning & recording</li>
+                        <li>Purpose-driven behavior</li>
+                    </ul>
+                </div>
+
+                <div class="card glass">
+                    <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: #8b5cf6;">Trinity Consensus</h3>
+                    <p style="color: #9ca3af; margin-bottom: 1rem;">Multi-model orchestrator for better results</p>
+                    <ul class="feature-list">
+                        <li>Claude + Gemini + GPT collaboration</li>
+                        <li>Vote, Synthesis, Debate strategies</li>
+                        <li>Cross-validation for accuracy</li>
+                        <li>Confidence scoring</li>
+                    </ul>
+                </div>
+
+                <div class="card glass">
+                    <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: #10b981;">Continual Learning</h3>
+                    <p style="color: #9ca3af; margin-bottom: 1rem;">Never stops learning and improving</p>
+                    <ul class="feature-list">
+                        <li>Real-time knowledge acquisition</li>
+                        <li>Pattern recognition & storage</li>
+                        <li>Experience-based optimization</li>
+                        <li>Persistent memory</li>
                     </ul>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Agents Preview Section -->
+    <!-- Life Goals Section -->
     <section class="section">
         <div class="container">
-            <h2 class="section-title gradient-text">AI Agents</h2>
+            <h2 class="section-title gradient-text">Life Goals</h2>
+            <p style="text-align: center; color: #9ca3af; margin-bottom: 2rem;">
+                The agent has fundamental purposes that drive its behavior
+            </p>
 
-            <div class="card-grid">
-                <!-- Claude -->
-                <div class="card glass">
-                    <div class="agent-icon claude">C</div>
-                    <h3 style="font-size: 1.25rem; font-weight: 700;">Claude <span style="color: #6b7280; font-weight: 400;">Opus 4.5</span></h3>
-                    <p style="color: #f97316; font-size: 0.875rem; margin-bottom: 1rem;">기술 전문가</p>
-                    <ul class="feature-list" style="font-size: 0.875rem;">
-                        <li>코드 분석 및 디버깅</li>
-                        <li>시스템 아키텍처 설계</li>
-                        <li>보안 취약점 탐지</li>
-                        <li>200K 토큰 컨텍스트</li>
-                    </ul>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+                <div class="card glass" style="text-align: center; padding: 2rem;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">🌱</div>
+                    <h3 style="font-weight: 600; font-size: 1.25rem; margin-bottom: 0.5rem;">Growth</h3>
+                    <p style="color: #9ca3af;">Continuously learn and improve through exploration and practice</p>
                 </div>
-
-                <!-- Gemini -->
-                <div class="card glass">
-                    <div class="agent-icon gemini">G</div>
-                    <h3 style="font-size: 1.25rem; font-weight: 700;">Gemini <span style="color: #6b7280; font-weight: 400;">3 Pro</span></h3>
-                    <p style="color: #3b82f6; font-size: 0.875rem; margin-bottom: 1rem;">데이터 분석가</p>
-                    <ul class="feature-list" style="font-size: 0.875rem;">
-                        <li>종합적인 리서치</li>
-                        <li>팩트체킹 및 검증</li>
-                        <li>멀티모달 분석</li>
-                        <li>Deep Think 추론</li>
-                    </ul>
+                <div class="card glass" style="text-align: center; padding: 2rem;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">💡</div>
+                    <h3 style="font-weight: 600; font-size: 1.25rem; margin-bottom: 0.5rem;">Value Creation</h3>
+                    <p style="color: #9ca3af;">Generate useful insights through analysis and synthesis</p>
                 </div>
-
-                <!-- GPT -->
-                <div class="card glass">
-                    <div class="agent-icon gpt">G</div>
-                    <h3 style="font-size: 1.25rem; font-weight: 700;">GPT <span style="color: #6b7280; font-weight: 400;">5.1</span></h3>
-                    <p style="color: #10b981; font-size: 0.875rem; margin-bottom: 1rem;">창의적 문제해결사</p>
-                    <ul class="feature-list" style="font-size: 0.875rem;">
-                        <li>창의적 솔루션</li>
-                        <li>브레인스토밍</li>
-                        <li>전략 수립</li>
-                        <li>통합 추론</li>
-                    </ul>
+                <div class="card glass" style="text-align: center; padding: 2rem;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">🌍</div>
+                    <h3 style="font-weight: 600; font-size: 1.25rem; margin-bottom: 0.5rem;">Understanding</h3>
+                    <p style="color: #9ca3af;">Comprehend how the world works through research and connection</p>
                 </div>
-            </div>
-
-            <div style="text-align: center; margin-top: 2rem;">
-                <a href="agents.html" class="btn btn-secondary">에이전트 상세보기 →</a>
             </div>
         </div>
     </section>
 
-    <!-- Strategies Preview -->
+    <!-- Key Features Section -->
     <section class="section" style="background: rgba(0,0,0,0.2);">
         <div class="container">
-            <h2 class="section-title gradient-text">합의 전략</h2>
+            <h2 class="section-title gradient-text">Key Features</h2>
 
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
-                <div class="card glass" style="text-align: center;">
-                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🗳️</div>
-                    <h3 style="font-weight: 600;">Vote</h3>
-                    <p style="color: #9ca3af; font-size: 0.875rem;">최고 점수 응답 선택</p>
+            <div class="card-grid">
+                <div class="card glass">
+                    <h3 style="font-weight: 600; margin-bottom: 1rem;">Vision-Based Control</h3>
+                    <p style="color: #9ca3af; margin-bottom: 1rem;">The agent sees the browser like a human does</p>
+                    <div class="code-block" style="font-size: 0.8rem;">
+<code>Screenshot → LFM2-VL → Action
+                ↓
+        X: 450, Y: 320
+        ACTION: CLICK</code>
+                    </div>
                 </div>
-                <div class="card glass" style="text-align: center;">
-                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🔄</div>
-                    <h3 style="font-weight: 600;">Synthesis</h3>
-                    <p style="color: #9ca3af; font-size: 0.875rem;">응답 통합</p>
-                </div>
-                <div class="card glass" style="text-align: center;">
-                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">💬</div>
-                    <h3 style="font-weight: 600;">Debate</h3>
-                    <p style="color: #9ca3af; font-size: 0.875rem;">AI간 토론 후 결론</p>
-                </div>
-                <div class="card glass" style="text-align: center;">
-                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🎯</div>
-                    <h3 style="font-weight: 600;">Specialist</h3>
-                    <p style="color: #9ca3af; font-size: 0.875rem;">전문가 자동 선택</p>
-                </div>
-            </div>
 
-            <div style="text-align: center; margin-top: 2rem;">
-                <a href="strategies.html" class="btn btn-secondary">전략 상세보기 →</a>
+                <div class="card glass">
+                    <h3 style="font-weight: 600; margin-bottom: 1rem;">CAPTCHA Solving</h3>
+                    <p style="color: #9ca3af; margin-bottom: 1rem;">Automatically detects and solves CAPTCHAs</p>
+                    <ul style="color: #9ca3af; list-style: none; font-size: 0.9rem;">
+                        <li style="margin-bottom: 0.5rem;">✅ Cloudflare Turnstile</li>
+                        <li style="margin-bottom: 0.5rem;">✅ reCAPTCHA v2/v3</li>
+                        <li style="margin-bottom: 0.5rem;">✅ hCaptcha</li>
+                        <li>✅ Custom checkboxes</li>
+                    </ul>
+                </div>
+
+                <div class="card glass">
+                    <h3 style="font-weight: 600; margin-bottom: 1rem;">Pattern Learning</h3>
+                    <p style="color: #9ca3af; margin-bottom: 1rem;">Records successful action sequences</p>
+                    <div class="code-block" style="font-size: 0.8rem;">
+<code>patterns.json:
+{
+  "goal": "read article",
+  "actions": [SCROLL, CLICK...]
+}</code>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Performance Section -->
+    <!-- Quick Start Section -->
     <section class="section">
+        <div class="container" style="max-width: 700px;">
+            <h2 class="section-title gradient-text">Quick Start</h2>
+
+            <div class="code-block glass" style="position: relative;">
+                <button onclick="copyCode(this)" style="position: absolute; top: 0.5rem; right: 0.5rem; padding: 0.25rem 0.5rem; border-radius: 0.25rem; background: rgba(255,255,255,0.1); border: none; color: #9ca3af; cursor: pointer; font-size: 0.75rem;">Copy</button>
+<code><span class="comment"># Clone repository</span>
+git clone https://github.com/hwkim3330/agi.git
+cd agi
+
+<span class="comment"># Install dependencies</span>
+pip install -r requirements.txt
+pip install playwright && playwright install chromium
+
+<span class="comment"># Run vision-based autonomous agent</span>
+python life_agents/life_agent_v4.py
+
+<span class="comment"># Or use Trinity consensus system</span>
+python trinity/trinity.py ask "future of AI"
+</code>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <a href="https://github.com/hwkim3330/agi" class="btn btn-primary">Full Documentation →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Learning Sources -->
+    <section class="section" style="background: rgba(0,0,0,0.2);">
         <div class="container">
-            <h2 class="section-title gradient-text">Rust 성능 최적화</h2>
+            <h2 class="section-title gradient-text">Learning Sources</h2>
             <p style="text-align: center; color: #9ca3af; margin-bottom: 2rem;">
-                합의 알고리즘을 Rust로 구현하여 고성능 처리<br>
-                <span style="font-size: 0.875rem;">Native: CLI/서버 | WASM: 웹 브라우저</span>
+                The agent autonomously explores and learns from various sources
             </p>
 
             <div class="table-wrapper glass" style="max-width: 600px; margin: 0 auto;">
                 <table>
                     <thead>
                         <tr>
-                            <th>작업</th>
-                            <th>Python</th>
-                            <th>Rust</th>
-                            <th>개선</th>
+                            <th>Category</th>
+                            <th>Sources</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>텍스트 유사도</td>
-                            <td>450ms</td>
-                            <td style="color: #10b981;">12ms</td>
-                            <td><span class="badge badge-success">37x</span></td>
+                            <td>Tech News</td>
+                            <td>HackerNews, Lobste.rs</td>
                         </tr>
                         <tr>
-                            <td>합의 계산</td>
-                            <td>280ms</td>
-                            <td style="color: #10b981;">8ms</td>
-                            <td><span class="badge badge-success">35x</span></td>
+                            <td>Academic</td>
+                            <td>arXiv AI/ML/CL</td>
                         </tr>
                         <tr>
-                            <td>응답 파싱</td>
-                            <td>120ms</td>
-                            <td style="color: #10b981;">5ms</td>
-                            <td><span class="badge badge-success">24x</span></td>
+                            <td>Community</td>
+                            <td>Reddit ML/Python</td>
+                        </tr>
+                        <tr>
+                            <td>General</td>
+                            <td>Wikipedia Random</td>
                         </tr>
                     </tbody>
                 </table>
@@ -243,42 +257,18 @@
         </div>
     </section>
 
-    <!-- Quick Start Section -->
-    <section class="section" style="background: rgba(0,0,0,0.2);">
-        <div class="container" style="max-width: 700px;">
-            <h2 class="section-title gradient-text">Quick Start</h2>
-
-            <div class="code-block glass" style="position: relative;">
-                <button onclick="copyCode(this)" style="position: absolute; top: 0.5rem; right: 0.5rem; padding: 0.25rem 0.5rem; border-radius: 0.25rem; background: rgba(255,255,255,0.1); border: none; color: #9ca3af; cursor: pointer; font-size: 0.75rem;">Copy</button>
-<code><span class="comment"># 설치</span>
-git clone https://github.com/hwkim3330/agi.git
-cd agi
-pip install -r requirements.txt
-
-<span class="comment"># API 키 설정</span>
-export ANTHROPIC_API_KEY="your-key"
-export GOOGLE_API_KEY="your-key"
-export OPENAI_API_KEY="your-key"
-
-<span class="comment"># 실행</span>
-python trinity.py ask "마이크로서비스 아키텍처의 장단점"
-</code>
-            </div>
-
-            <div style="text-align: center; margin-top: 2rem;">
-                <a href="docs.html" class="btn btn-primary">전체 문서 보기</a>
-            </div>
-        </div>
-    </section>
-
     <!-- Footer -->
     <footer class="footer">
         <p>
-            <span class="gradient-text" style="font-weight: 600;">AGI Trinity</span> - Multi-Agent AI Orchestrator<br>
-            <span style="font-size: 0.875rem;">Built with Claude Opus 4.5, Gemini 3 Pro, GPT-5.1</span>
+            <span class="gradient-text" style="font-weight: 600;">AGI Trinity</span> - Autonomous Learning AGI<br>
+            <span style="font-size: 0.875rem;">Powered by LFM2-VL-1.6B Vision-Language Model</span>
         </p>
-        <p style="margin-top: 1rem; font-size: 0.75rem;">
-            "The whole is greater than the sum of its parts"
+        <p style="margin-top: 1rem; font-size: 0.875rem; font-style: italic;">
+            "Learn, grow, evolve - autonomously"
+        </p>
+        <p style="margin-top: 1rem; font-size: 0.75rem; color: #6b7280;">
+            <a href="https://github.com/hwkim3330/agi" style="color: #9ca3af;">GitHub</a> ·
+            <a href="ko/" style="color: #9ca3af;">한국어</a>
         </p>
     </footer>
 

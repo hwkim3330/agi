@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Life Agent - AGI Trinity</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xz/fonts@1/serve/plus-jakarta-sans.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header glass">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">T</div>
+                <span class="logo-text gradient-text">AGI Trinity</span>
+            </a>
+
+            <nav class="nav">
+                <a href="index.html">Home</a>
+                <a href="life-agent.html" class="active" style="color: #06b6d4;">Life Agent</a>
+                <a href="trinity.html">Trinity</a>
+                <a href="demo.html">Demo</a>
+                <a href="ko/">한국어</a>
+            </nav>
+
+            <a href="https://github.com/hwkim3330/agi" target="_blank" class="btn btn-primary">
+                GitHub
+            </a>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero" style="padding-bottom: 2rem;">
+        <div class="container">
+            <h1>
+                <span class="gradient-text">Life Agent</span>
+            </h1>
+            <p>
+                Vision-based autonomous browser agent<br>
+                that learns by looking at screenshots
+            </p>
+        </div>
+    </section>
+
+    <!-- Version Comparison -->
+    <section class="section" style="padding-top: 2rem;">
+        <div class="container">
+            <h2 class="section-title">Version History</h2>
+
+            <div class="table-wrapper glass">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Version</th>
+                            <th>Features</th>
+                            <th>Key Innovation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span style="color: #6b7280;">v1</span></td>
+                            <td>Basic browser exploration</td>
+                            <td>Playwright automation</td>
+                        </tr>
+                        <tr>
+                            <td><span style="color: #9ca3af;">v2</span></td>
+                            <td>Purpose-driven learning</td>
+                            <td>Life goals (growth, value, understanding)</td>
+                        </tr>
+                        <tr>
+                            <td><span style="color: #3b82f6;">v3</span></td>
+                            <td>CAPTCHA solving + Browser Use</td>
+                            <td>JavaScript-based CAPTCHA detection</td>
+                        </tr>
+                        <tr>
+                            <td><span style="color: #06b6d4; font-weight: 600;">v4 (Latest)</span></td>
+                            <td>Vision-based control</td>
+                            <td>Screenshot → VLM → Coordinates</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="section" style="background: rgba(0,0,0,0.2);">
+        <div class="container" style="max-width: 900px;">
+            <h2 class="section-title gradient-text">How It Works</h2>
+
+            <div class="glass" style="padding: 2rem; border-radius: 1rem;">
+<pre style="font-family: 'Fira Code', monospace; font-size: 0.9rem; color: #d1d5db; line-height: 2;">
+┌──────────────┐
+│   Browser    │  ←── Playwright controls the browser
+└──────┬───────┘
+       │
+       ▼
+┌──────────────┐
+│  Screenshot  │  ←── Take a PNG screenshot
+└──────┬───────┘
+       │
+       ▼
+┌──────────────┐
+│  <span style="color: #f97316;">LFM2-VL</span>     │  ←── Vision model analyzes the image
+│  Analysis    │      "Where should I click?"
+└──────┬───────┘
+       │
+       ▼
+┌──────────────┐      ACTION: CLICK
+│   Decision   │  ──▶ X: 450
+└──────┬───────┘      Y: 320
+       │
+       ▼
+┌──────────────┐
+│   Execute    │  ←── page.mouse.click(x, y)
+└──────────────┘
+</pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- Vision Analysis -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title gradient-text">Vision-Based Analysis</h2>
+
+            <div class="card-grid">
+                <div class="card glass">
+                    <h3 style="font-weight: 600; margin-bottom: 1rem; color: #06b6d4;">Supported Actions</h3>
+                    <ul class="feature-list">
+                        <li><strong>CLICK</strong> - Click at X, Y coordinates</li>
+                        <li><strong>CLICK_CAPTCHA</strong> - Click CAPTCHA checkbox</li>
+                        <li><strong>TYPE</strong> - Click + Type text + Enter</li>
+                        <li><strong>SCROLL</strong> - Scroll up or down</li>
+                        <li><strong>WAIT</strong> - Wait for page load</li>
+                        <li><strong>DONE</strong> - Goal achieved</li>
+                    </ul>
+                </div>
+
+                <div class="card glass">
+                    <h3 style="font-weight: 600; margin-bottom: 1rem; color: #8b5cf6;">Vision Model Prompt</h3>
+                    <div class="code-block" style="font-size: 0.8rem;">
+<code>Analyze this browser screenshot.
+Current goal: {goal}
+
+Respond with:
+ACTION: CLICK / TYPE / SCROLL / DONE
+X: [x coordinate]
+Y: [y coordinate]
+TARGET: [what to click]</code>
+                    </div>
+                </div>
+
+                <div class="card glass">
+                    <h3 style="font-weight: 600; margin-bottom: 1rem; color: #10b981;">Response Parsing</h3>
+                    <div class="code-block" style="font-size: 0.8rem;">
+<code>ACTION: CLICK
+X: 450
+Y: 320
+TARGET: News article link
+
+→ page.mouse.click(450, 320)</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CAPTCHA Solving -->
+    <section class="section" style="background: rgba(0,0,0,0.2);">
+        <div class="container" style="max-width: 800px;">
+            <h2 class="section-title gradient-text">CAPTCHA Solving</h2>
+            <p style="text-align: center; color: #9ca3af; margin-bottom: 2rem;">
+                The vision model sees the CAPTCHA just like a human would
+            </p>
+
+            <div class="glass" style="padding: 2rem; border-radius: 1rem;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; text-align: center;">
+                    <div>
+                        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">☁️</div>
+                        <h4 style="font-weight: 600;">Cloudflare Turnstile</h4>
+                        <p style="color: #9ca3af; font-size: 0.875rem;">Checkbox detection</p>
+                    </div>
+                    <div>
+                        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🔒</div>
+                        <h4 style="font-weight: 600;">reCAPTCHA</h4>
+                        <p style="color: #9ca3af; font-size: 0.875rem;">v2 & v3 support</p>
+                    </div>
+                    <div>
+                        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🤖</div>
+                        <h4 style="font-weight: 600;">hCaptcha</h4>
+                        <p style="color: #9ca3af; font-size: 0.875rem;">Checkbox click</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pattern Learning -->
+    <section class="section">
+        <div class="container" style="max-width: 800px;">
+            <h2 class="section-title gradient-text">Pattern Learning</h2>
+            <p style="text-align: center; color: #9ca3af; margin-bottom: 2rem;">
+                Records successful action sequences for future reference
+            </p>
+
+            <div class="code-block glass">
+<code><span class="comment"># patterns.json - Learned behaviors</span>
+{
+  "patterns": [
+    {
+      "goal": "read AI news",
+      "actions": [
+        {"action": "SCROLL", "direction": "down"},
+        {"action": "CLICK", "x": 340, "y": 250, "target": "article link"},
+        {"action": "DONE", "result": "article read"}
+      ],
+      "timestamp": "2024-12-10T14:30:00"
+    }
+  ]
+}</code>
+            </div>
+        </div>
+    </section>
+
+    <!-- Usage -->
+    <section class="section" style="background: rgba(0,0,0,0.2);">
+        <div class="container" style="max-width: 700px;">
+            <h2 class="section-title gradient-text">Usage</h2>
+
+            <div class="code-block glass">
+<code><span class="comment"># Run the latest vision-based agent</span>
+python life_agents/life_agent_v4.py
+
+<span class="comment"># Output:</span>
+╔═══════════════════════════════════════════════════════════╗
+║     🌟 LIFE AGENT v4 - Vision-Based Browser Control 🌟    ║
+║                                                           ║
+║   Purpose: Growth                                         ║
+║   "I see, I think, I act, I learn"                        ║
+╚═══════════════════════════════════════════════════════════╝
+
+🔭 Exploring: https://news.ycombinator.com/newest
+   🎯 Goal: Read latest AI news
+
+--- Step 1/8 ---
+   🎯 Action: SCROLL
+   📜 Scrolling down
+
+--- Step 2/8 ---
+   🎯 Action: CLICK
+   🖱️ Click at (340, 250)
+   ✅ Goal achieved: article read
+</code>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <a href="https://github.com/hwkim3330/agi/blob/main/life_agents/life_agent_v4.py" class="btn btn-primary">View Source Code →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>
+            <span class="gradient-text" style="font-weight: 600;">AGI Trinity</span> - Life Agent<br>
+            <span style="font-size: 0.875rem;">Vision-based autonomous browser control</span>
+        </p>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trinity System - AGI Trinity</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xz/fonts@1/serve/plus-jakarta-sans.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header glass">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">T</div>
+                <span class="logo-text gradient-text">AGI Trinity</span>
+            </a>
+
+            <nav class="nav">
+                <a href="index.html">Home</a>
+                <a href="life-agent.html" style="color: #06b6d4;">Life Agent</a>
+                <a href="trinity.html" class="active">Trinity</a>
+                <a href="demo.html">Demo</a>
+                <a href="ko/">한국어</a>
+            </nav>
+
+            <a href="https://github.com/hwkim3330/agi" target="_blank" class="btn btn-primary">
+                GitHub
+            </a>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero" style="padding-bottom: 2rem;">
+        <div class="container">
+            <h1>
+                <span class="gradient-text">Trinity System</span>
+            </h1>
+            <p>
+                Multi-model consensus orchestrator<br>
+                "Three minds, one consciousness"
+            </p>
+        </div>
+    </section>
+
+    <!-- Architecture -->
+    <section class="section" style="padding-top: 2rem;">
+        <div class="container" style="max-width: 800px;">
+            <h2 class="section-title">Architecture</h2>
+
+            <div class="glass" style="padding: 2rem; border-radius: 1rem;">
+<pre style="font-family: 'Fira Code', monospace; font-size: 0.85rem; color: #d1d5db; line-height: 1.8; text-align: center;">
+            ┌─────────────────────┐
+            │    USER REQUEST     │
+            └──────────┬──────────┘
+                       │
+            ┌──────────▼──────────┐
+            │    SMART ROUTER     │
+            │   Question Routing  │
+            └──────────┬──────────┘
+                       │
+      ┌────────────────┼────────────────┐
+      │                │                │
+      ▼                ▼                ▼
+┌───────────┐    ┌───────────┐    ┌───────────┐
+│  <span style="color: #f97316">CLAUDE</span>   │    │  <span style="color: #3b82f6">GEMINI</span>   │    │    <span style="color: #10b981">GPT</span>    │
+│ Opus 4.5  │    │  3 Pro    │    │    5.1    │
+└─────┬─────┘    └─────┬─────┘    └─────┬─────┘
+      │                │                │
+      └────────────────┼────────────────┘
+                       │
+            ┌──────────▼──────────┐
+            │  CONSENSUS ENGINE   │
+            │  Vote / Synthesis   │
+            └──────────┬──────────┘
+                       │
+            ┌──────────▼──────────┐
+            │   FINAL RESPONSE    │
+            └─────────────────────┘
+</pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- Agents -->
+    <section class="section" style="background: rgba(0,0,0,0.2);">
+        <div class="container">
+            <h2 class="section-title gradient-text">AI Agents</h2>
+
+            <div class="card-grid">
+                <!-- Claude -->
+                <div class="card glass">
+                    <div class="agent-icon claude">C</div>
+                    <h3 style="font-size: 1.25rem; font-weight: 700;">Claude <span style="color: #6b7280; font-weight: 400;">Opus 4.5</span></h3>
+                    <p style="color: #f97316; font-size: 0.875rem; margin-bottom: 1rem;">Technical Expert</p>
+                    <ul class="feature-list" style="font-size: 0.875rem;">
+                        <li>Code analysis & debugging</li>
+                        <li>System architecture design</li>
+                        <li>Security vulnerability detection</li>
+                        <li>200K token context</li>
+                    </ul>
+                </div>
+
+                <!-- Gemini -->
+                <div class="card glass">
+                    <div class="agent-icon gemini">G</div>
+                    <h3 style="font-size: 1.25rem; font-weight: 700;">Gemini <span style="color: #6b7280; font-weight: 400;">3 Pro</span></h3>
+                    <p style="color: #3b82f6; font-size: 0.875rem; margin-bottom: 1rem;">Data Analyst</p>
+                    <ul class="feature-list" style="font-size: 0.875rem;">
+                        <li>Comprehensive research</li>
+                        <li>Fact-checking & verification</li>
+                        <li>Multimodal analysis</li>
+                        <li>Deep Think reasoning</li>
+                    </ul>
+                </div>
+
+                <!-- GPT -->
+                <div class="card glass">
+                    <div class="agent-icon gpt">G</div>
+                    <h3 style="font-size: 1.25rem; font-weight: 700;">GPT <span style="color: #6b7280; font-weight: 400;">5.1</span></h3>
+                    <p style="color: #10b981; font-size: 0.875rem; margin-bottom: 1rem;">Creative Problem Solver</p>
+                    <ul class="feature-list" style="font-size: 0.875rem;">
+                        <li>Creative solutions</li>
+                        <li>Brainstorming</li>
+                        <li>Strategy development</li>
+                        <li>Integrated reasoning</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Consensus Strategies -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title gradient-text">Consensus Strategies</h2>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                <div class="card glass" style="padding: 1.5rem;">
+                    <div style="font-size: 2rem; margin-bottom: 1rem;">🗳️</div>
+                    <h3 style="font-weight: 600; font-size: 1.25rem; margin-bottom: 0.5rem;">Vote</h3>
+                    <p style="color: #9ca3af; margin-bottom: 1rem;">Select the best response based on quality scoring</p>
+                    <div class="code-block" style="font-size: 0.75rem;">
+<code>trinity.py ask "question" --strategy vote</code>
+                    </div>
+                </div>
+
+                <div class="card glass" style="padding: 1.5rem;">
+                    <div style="font-size: 2rem; margin-bottom: 1rem;">🔄</div>
+                    <h3 style="font-weight: 600; font-size: 1.25rem; margin-bottom: 0.5rem;">Synthesis</h3>
+                    <p style="color: #9ca3af; margin-bottom: 1rem;">Combine insights from all agents into unified response</p>
+                    <div class="code-block" style="font-size: 0.75rem;">
+<code>trinity.py ask "question" --strategy synthesis</code>
+                    </div>
+                </div>
+
+                <div class="card glass" style="padding: 1.5rem;">
+                    <div style="font-size: 2rem; margin-bottom: 1rem;">📤</div>
+                    <h3 style="font-weight: 600; font-size: 1.25rem; margin-bottom: 0.5rem;">Fanout</h3>
+                    <p style="color: #9ca3af; margin-bottom: 1rem;">Return all individual responses without consensus</p>
+                    <div class="code-block" style="font-size: 0.75rem;">
+<code>trinity.py ask "question" --strategy fanout</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Trinity -->
+    <section class="section" style="background: rgba(0,0,0,0.2);">
+        <div class="container">
+            <h2 class="section-title gradient-text">Why Multi-Model?</h2>
+
+            <div class="card-grid">
+                <div class="card glass">
+                    <h3 style="font-weight: 600; margin-bottom: 1rem;">Single AI Limitations</h3>
+                    <ul style="color: #9ca3af; list-style: none;">
+                        <li style="margin-bottom: 0.5rem;">❌ Hallucinations</li>
+                        <li style="margin-bottom: 0.5rem;">❌ Biased perspectives</li>
+                        <li style="margin-bottom: 0.5rem;">❌ Domain-specific weaknesses</li>
+                        <li>❌ Uncertain answers</li>
+                    </ul>
+                </div>
+
+                <div class="card glass">
+                    <h3 style="font-weight: 600; margin-bottom: 1rem;">Trinity Solution</h3>
+                    <ul class="feature-list">
+                        <li>Cross-validation for accuracy</li>
+                        <li>Multi-perspective analysis</li>
+                        <li>Combine each AI's strengths</li>
+                        <li>Confidence scoring</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Usage -->
+    <section class="section">
+        <div class="container" style="max-width: 700px;">
+            <h2 class="section-title gradient-text">Usage</h2>
+
+            <div class="code-block glass">
+<code><span class="comment"># CLI usage</span>
+python trinity/trinity.py ask "What are the pros and cons of microservices?"
+
+<span class="comment"># Python API</span>
+from trinity import Trinity
+
+tri = Trinity()
+response = tri.ask(
+    "Explain quantum computing",
+    strategy="synthesis",
+    agents=["claude", "gemini", "gpt"]
+)
+
+print(response.consensus_content)
+print(f"Confidence: {response.confidence:.0%}")
+</code>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <a href="https://github.com/hwkim3330/agi/blob/main/trinity/trinity.py" class="btn btn-primary">View Source Code →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>
+            <span class="gradient-text" style="font-weight: 600;">AGI Trinity</span> - Multi-Model Consensus<br>
+            <span style="font-size: 0.875rem;">"The whole is greater than the sum of its parts"</span>
+        </p>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
